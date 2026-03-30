@@ -64,6 +64,7 @@ export function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
           <h2 className="text-xl font-bold text-white">Add Testimonial</h2>
           <button
             onClick={onClose}
+            aria-label="Close dialog"
             className="text-gray-400 hover:text-white transition-colors"
           >
             <X size={24} />
@@ -123,6 +124,7 @@ export function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
                   key={rating}
                   type="button"
                   onClick={() => setFormData({ ...formData, rating })}
+                  aria-label={`Set rating to ${rating} star${rating > 1 ? 's' : ''}`}
                   className={`p-2 transition-colors ${
                     rating <= formData.rating
                       ? 'text-orange-600'

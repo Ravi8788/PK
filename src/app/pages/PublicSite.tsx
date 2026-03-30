@@ -7,7 +7,6 @@ import { Testimonials } from '@/app/components/Testimonials';
 import { Contact } from '@/app/components/Contact';
 import { Footer } from '@/app/components/Footer';
 import { Navigation } from '@/app/components/Navigation';
-import { InitialSetupBanner } from '@/app/components/InitialSetupBanner';
 import { useState, useEffect } from 'react';
 import { portfolioAPI } from '@/app/utils/api';
 
@@ -31,7 +30,6 @@ export default function PublicSite() {
   return (
     <div className="min-h-screen bg-black overflow-x-hidden scroll-smooth">
       <Navigation />
-      <InitialSetupBanner hasContent={hasContent} />
       
       {/* Main scrollable container with proper overflow */}
       <main className="w-full overflow-y-auto">

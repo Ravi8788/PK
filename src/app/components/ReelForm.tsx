@@ -94,6 +94,7 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
           <h2 className="text-xl font-bold text-white">Add Reel</h2>
           <button
             onClick={onClose}
+            aria-label="Close dialog"
             className="text-gray-400 hover:text-white transition-colors"
           >
             <X size={24} />

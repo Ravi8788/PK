@@ -40,9 +40,10 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/pk.graphic_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram"
                 className="w-10 h-10 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
               >
                 <Instagram size={18} />
@@ -51,14 +52,16 @@ export function Footer() {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="YouTube"
                 className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
               >
                 <Youtube size={18} />
               </a>
               <a
-                href="https://wa.me/1234567890"
+                href="https://wa.me/919371461780"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="WhatsApp"
                 className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
               >
                 <MessageCircle size={18} />
@@ -122,18 +125,17 @@ export function Footer() {
             <h3 className="font-bold text-lg mb-4">Contact</h3>
             <ul className="space-y-3 text-gray-400">
               <li>
-                <a href="mailto:contact@pkgraphics.com" className="hover:text-orange-500 transition-colors">
-                  contact@pkgraphics.com
+                <a href="mailto:kudaleprathamesh0@gmail.com" className="hover:text-orange-500 transition-colors">
+                  kudaleprathamesh0@gmail.com
                 </a>
               </li>
               <li>
-                <a href="tel:+1234567890" className="hover:text-orange-500 transition-colors">
-                  +1 (234) 567-890
+                <a href="tel:+919371461780" className="hover:text-orange-500 transition-colors">
+                  9371461780
                 </a>
               </li>
               <li>
-                Mumbai, Maharashtra<br />
-                India
+                Kolhapur, Maharashtra
               </li>
             </ul>
           </div>

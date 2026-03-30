@@ -1,20 +1,20 @@
-import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getApp, getApps, initializeApp } from 'firebase/app';
 import {
-  getAuth,
   createUserWithEmailAndPassword,
+  getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged,
   updateProfile,
 } from 'firebase/auth';
 import {
-  getDatabase,
-  ref,
   get,
+  getDatabase,
   push,
+  ref,
+  remove,
   set,
   update,
-  remove,
 } from 'firebase/database';
 
 const firebaseConfig = {
@@ -31,15 +31,27 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-function toArray(snapshotValue: any) {
-  if (!snapshotValue) return [];
-  return Object.entries(snapshotValue).map(([id, value]: any) => ({ id, ...value }));
+function toArray<T extends object>(snapshotValue: unknown): Array<T & { id: string }> {
+  if (!snapshotValue || typeof snapshotValue !== 'object') {
+    return [];
+  }
+
+  return Object.entries(snapshotValue as Record<string, T>).map(([id, value]) => ({
+    id,
+    ...value,
+  }));
 }
 
 function sortByCreatedAtDesc<T extends { created_at?: number | string }>(list: T[]) {
   return [...list].sort((a, b) => {
-    const va = typeof a.created_at === 'number' ? a.created_at : Date.parse(String(a.created_at || 0));
-    const vb = typeof b.created_at === 'number' ? b.created_at : Date.parse(String(b.created_at || 0));
+    const va =
+      typeof a.created_at === 'number'
+        ? a.created_at
+        : Date.parse(String(a.created_at ?? 0));
+    const vb =
+      typeof b.created_at === 'number'
+        ? b.created_at
+        : Date.parse(String(b.created_at ?? 0));
     return vb - va;
   });
 }
@@ -52,6 +64,7 @@ export const authAPI = {
     if (name) {
       await updateProfile(cred.user, { displayName: name });
     }
+
     return {
       user: {
         uid: cred.user.uid,
@@ -88,16 +101,20 @@ export const authAPI = {
     }
 
     return new Promise<any>((resolve) => {
-      const unsub = onAuthStateChanged(auth, async (u) => {
+      const unsub = onAuthStateChanged(auth, async (currentUser) => {
         unsub();
-        if (!u) return resolve(null);
+        if (!currentUser) {
+          resolve(null);
+          return;
+        }
+
         resolve({
           user: {
-            uid: u.uid,
-            email: u.email,
-            name: u.displayName || '',
+            uid: currentUser.uid,
+            email: currentUser.email,
+            name: currentUser.displayName || '',
           },
-          token: await u.getIdToken(),
+          token: await currentUser.getIdToken(),
         });
       });
     });
@@ -109,21 +126,18 @@ export const authAPI = {
 };
 
 export const storageAPI = {
-  async uploadFile(file: File, path: string) {
+  async uploadFile(file: File, _path: string) {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
-      
+
       reader.onload = () => {
-        // Get base64 string
-        const base64String = reader.result as string;
-        resolve(base64String);
+        resolve(reader.result as string);
       };
-      
+
       reader.onerror = () => {
         reject(new Error('Failed to read file'));
       };
-      
-      // Read file as data URL (base64)
+
       reader.readAsDataURL(file);
     });
   },
@@ -134,6 +148,7 @@ export const portfolioAPI = {
     const snap = await get(ref(db, 'portfolio'));
     return sortByCreatedAtDesc(toArray(snap.val()));
   },
+
   async add(item: any) {
     const node = push(ref(db, 'portfolio'));
     const payload = {
@@ -143,10 +158,12 @@ export const portfolioAPI = {
     await set(node, payload);
     return { id: node.key, ...payload };
   },
+
   async update(id: string, updates: any) {
     await update(ref(db, `portfolio/${id}`), updates);
     return { id, ...updates };
   },
+
   async delete(id: string) {
     await remove(ref(db, `portfolio/${id}`));
     return null;
@@ -158,6 +175,7 @@ export const reelsAPI = {
     const snap = await get(ref(db, 'reels'));
     return sortByCreatedAtDesc(toArray(snap.val()));
   },
+
   async add(item: any) {
     const node = push(ref(db, 'reels'));
     const payload = {
@@ -167,10 +185,12 @@ export const reelsAPI = {
     await set(node, payload);
     return { id: node.key, ...payload };
   },
+
   async update(id: string, updates: any) {
     await update(ref(db, `reels/${id}`), updates);
     return { id, ...updates };
   },
+
   async delete(id: string) {
     await remove(ref(db, `reels/${id}`));
     return null;
@@ -182,6 +202,7 @@ export const testimonialsAPI = {
     const snap = await get(ref(db, 'testimonials'));
     return sortByCreatedAtDesc(toArray(snap.val()));
   },
+
   async add(item: any) {
     const node = push(ref(db, 'testimonials'));
     const payload = {
@@ -191,10 +212,12 @@ export const testimonialsAPI = {
     await set(node, payload);
     return { id: node.key, ...payload };
   },
+
   async update(id: string, updates: any) {
     await update(ref(db, `testimonials/${id}`), updates);
     return { id, ...updates };
   },
+
   async delete(id: string) {
     await remove(ref(db, `testimonials/${id}`));
     return null;
@@ -211,6 +234,7 @@ export const contactAPI = {
     await set(node, payload);
     return { id: node.key, ...payload };
   },
+
   async getAll() {
     const snap = await get(ref(db, 'contacts'));
     return sortByCreatedAtDesc(toArray(snap.val()));

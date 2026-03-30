@@ -127,7 +127,7 @@ export function Reels() {
           className="text-center mt-12"
         >
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/pk.graphic_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-300"

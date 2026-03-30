@@ -103,6 +103,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
           <h2 className="text-xl font-bold text-white">Add Portfolio Item</h2>
           <button
             onClick={onClose}
+            aria-label="Close dialog"
             className="text-gray-400 hover:text-white transition-colors"
           >
             <X size={24} />
@@ -125,10 +126,11 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="portfolio-category" className="block text-sm font-medium text-gray-300 mb-2">
               Category
             </label>
             <select
+              id="portfolio-category"
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
@@ -155,10 +157,11 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="portfolio-media-type" className="block text-sm font-medium text-gray-300 mb-2">
               Media Type
             </label>
             <select
+              id="portfolio-media-type"
               value={mediaType}
               onChange={(e) => setMediaType(e.target.value as 'image' | 'video')}
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
@@ -170,10 +173,11 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="portfolio-upload-method" className="block text-sm font-medium text-gray-300 mb-2">
               Upload Method
             </label>
             <select
+              id="portfolio-upload-method"
               value={uploadMethod}
               onChange={(e) => setUploadMethod(e.target.value as 'file' | 'url')}
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
@@ -250,7 +254,6 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
                     videoPreview ? (
                       <video
                         src={videoPreview}
-                        alt="Preview"
                         className="w-full h-full object-cover rounded-lg"
                         controls
                       />

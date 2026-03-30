@@ -82,8 +82,8 @@ export function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-white mb-1">Email</h4>
-                  <a href="mailto:contact@pkgraphics.com" className="text-gray-300 hover:text-orange-500 transition-colors">
-                    contact@pkgraphics.com
+                  <a href="mailto:kudaleprathamesh0@gmail.com" className="text-gray-300 hover:text-orange-500 transition-colors">
+                    kudaleprathamesh0@gmail.com
                   </a>
                 </div>
               </div>
@@ -94,8 +94,8 @@ export function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-white mb-1">Phone</h4>
-                  <a href="tel:+1234567890" className="text-gray-300 hover:text-orange-500 transition-colors">
-                    +1 (234) 567-890
+                  <a href="tel:+919371461780" className="text-gray-300 hover:text-orange-500 transition-colors">
+                    9371461780
                   </a>
                 </div>
               </div>
@@ -107,8 +107,7 @@ export function Contact() {
                 <div>
                   <h4 className="font-semibold text-white mb-1">Location</h4>
                   <p className="text-gray-300">
-                    Mumbai, Maharashtra<br />
-                    India
+                    Kolhapur, Maharashtra
                   </p>
                 </div>
               </div>
@@ -119,9 +118,10 @@ export function Contact() {
               <h4 className="font-semibold text-white mb-4">Follow Me</h4>
               <div className="flex gap-4">
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/pk.graphic_?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Instagram"
                   className="w-12 h-12 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
                 >
                   <Instagram size={20} />
@@ -130,14 +130,16 @@ export function Contact() {
                   href="https://youtube.com"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="YouTube"
                   className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
                 >
                   <Youtube size={20} />
                 </a>
                 <a
-                  href="https://wa.me/1234567890"
+                  href="https://wa.me/919371461780"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="WhatsApp"
                   className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
                 >
                   <MessageCircle size={20} />
