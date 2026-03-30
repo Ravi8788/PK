@@ -27,9 +27,52 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
+const requiredFirebaseKeys = [
+  'apiKey',
+  'authDomain',
+  'databaseURL',
+  'projectId',
+  'storageBucket',
+  'messagingSenderId',
+  'appId',
+] as const;
+
+function isPlaceholderValue(value: string | undefined) {
+  if (!value) return true;
+  return (
+    value.includes('your_') ||
+    value.includes('your-project') ||
+    value.includes('example') ||
+    value === '1234567890' ||
+    value === '1:1234567890:web:abcdef123456'
+  );
+}
+
+const missingFirebaseKeys = requiredFirebaseKeys.filter((key) =>
+  isPlaceholderValue(firebaseConfig[key]),
+);
+
+const firebaseReady = missingFirebaseKeys.length === 0;
+
+if (!firebaseReady) {
+  console.warn(
+    `Firebase configuration is incomplete. Missing or placeholder env vars: ${missingFirebaseKeys.join(', ')}`,
+  );
+}
+
+const app = firebaseReady ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : null;
+const auth = app ? getAuth(app) : null;
+const db = app ? getDatabase(app) : null;
+
+function ensureFirebaseReady() {
+  if (!firebaseReady || !auth || !db) {
+    throw new Error(
+      `Firebase is not configured. Add valid VITE_FIREBASE_* environment variables. Missing: ${missingFirebaseKeys.join(', ')}`,
+    );
+  }
+
+  return { auth, db };
+}
 
 function toArray<T extends object>(snapshotValue: unknown): Array<T & { id: string }> {
   if (!snapshotValue || typeof snapshotValue !== 'object') {
@@ -56,10 +99,11 @@ function sortByCreatedAtDesc<T extends { created_at?: number | string }>(list: T
   });
 }
 
-export const isBackendConfigured = () => true;
+export const isBackendConfigured = () => firebaseReady;
 
 export const authAPI = {
   async signup(email: string, password: string, name: string) {
+    const { auth } = ensureFirebaseReady();
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     if (name) {
       await updateProfile(cred.user, { displayName: name });
@@ -76,6 +120,7 @@ export const authAPI = {
   },
 
   async signin(email: string, password: string) {
+    const { auth } = ensureFirebaseReady();
     const cred = await signInWithEmailAndPassword(auth, email, password);
     return {
       user: {
@@ -88,6 +133,10 @@ export const authAPI = {
   },
 
   async getSession() {
+    if (!firebaseReady || !auth) {
+      return null;
+    }
+
     const user = auth.currentUser;
     if (user) {
       return {
@@ -121,6 +170,7 @@ export const authAPI = {
   },
 
   async signOut() {
+    const { auth } = ensureFirebaseReady();
     await signOut(auth);
   },
 };
@@ -145,11 +195,16 @@ export const storageAPI = {
 
 export const portfolioAPI = {
   async getAll() {
+    if (!firebaseReady || !db) {
+      return [];
+    }
+
     const snap = await get(ref(db, 'portfolio'));
     return sortByCreatedAtDesc(toArray(snap.val()));
   },
 
   async add(item: any) {
+    const { db } = ensureFirebaseReady();
     const node = push(ref(db, 'portfolio'));
     const payload = {
       ...item,
@@ -160,11 +215,13 @@ export const portfolioAPI = {
   },
 
   async update(id: string, updates: any) {
+    const { db } = ensureFirebaseReady();
     await update(ref(db, `portfolio/${id}`), updates);
     return { id, ...updates };
   },
 
   async delete(id: string) {
+    const { db } = ensureFirebaseReady();
     await remove(ref(db, `portfolio/${id}`));
     return null;
   },
@@ -172,11 +229,16 @@ export const portfolioAPI = {
 
 export const reelsAPI = {
   async getAll() {
+    if (!firebaseReady || !db) {
+      return [];
+    }
+
     const snap = await get(ref(db, 'reels'));
     return sortByCreatedAtDesc(toArray(snap.val()));
   },
 
   async add(item: any) {
+    const { db } = ensureFirebaseReady();
     const node = push(ref(db, 'reels'));
     const payload = {
       ...item,
@@ -187,11 +249,13 @@ export const reelsAPI = {
   },
 
   async update(id: string, updates: any) {
+    const { db } = ensureFirebaseReady();
     await update(ref(db, `reels/${id}`), updates);
     return { id, ...updates };
   },
 
   async delete(id: string) {
+    const { db } = ensureFirebaseReady();
     await remove(ref(db, `reels/${id}`));
     return null;
   },
@@ -199,11 +263,16 @@ export const reelsAPI = {
 
 export const testimonialsAPI = {
   async getAll() {
+    if (!firebaseReady || !db) {
+      return [];
+    }
+
     const snap = await get(ref(db, 'testimonials'));
     return sortByCreatedAtDesc(toArray(snap.val()));
   },
 
   async add(item: any) {
+    const { db } = ensureFirebaseReady();
     const node = push(ref(db, 'testimonials'));
     const payload = {
       ...item,
@@ -214,11 +283,13 @@ export const testimonialsAPI = {
   },
 
   async update(id: string, updates: any) {
+    const { db } = ensureFirebaseReady();
     await update(ref(db, `testimonials/${id}`), updates);
     return { id, ...updates };
   },
 
   async delete(id: string) {
+    const { db } = ensureFirebaseReady();
     await remove(ref(db, `testimonials/${id}`));
     return null;
   },
@@ -226,6 +297,7 @@ export const testimonialsAPI = {
 
 export const contactAPI = {
   async submit(formData: any) {
+    const { db } = ensureFirebaseReady();
     const node = push(ref(db, 'contacts'));
     const payload = {
       ...formData,
@@ -236,6 +308,10 @@ export const contactAPI = {
   },
 
   async getAll() {
+    if (!firebaseReady || !db) {
+      return [];
+    }
+
     const snap = await get(ref(db, 'contacts'));
     return sortByCreatedAtDesc(toArray(snap.val()));
   },
