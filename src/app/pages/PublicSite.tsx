@@ -29,7 +29,7 @@ export default function PublicSite() {
   };
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden scroll-smooth">
+    <div className="min-h-screen bg-black overflow-x-hidden scroll-smooth">
       <Navigation />
       <InitialSetupBanner hasContent={hasContent} />
       

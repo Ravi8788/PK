@@ -49,7 +49,7 @@ export function Services() {
   ];
 
   return (
-    <section id="services" className="py-24 bg-white">
+    <section id="services" className="py-24 bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -59,13 +59,13 @@ export function Services() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-amber-500 tracking-widest text-sm uppercase mb-2">
+          <span className="inline-block text-orange-600 tracking-widest text-sm uppercase mb-2">
             Services
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             What I Offer
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-300 max-w-2xl mx-auto">
             Comprehensive photography and videography services tailored to your unique needs
           </p>
         </motion.div>
@@ -81,35 +81,35 @@ export function Services() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group bg-white border border-gray-200 rounded-2xl p-8 hover:shadow-2xl hover:border-amber-500 transition-all duration-300"
+                className="group bg-gray-900 border border-gray-800 rounded-2xl p-8 hover:shadow-2xl hover:border-orange-500 transition-all duration-300"
               >
                 {/* Icon */}
-                <div className="w-14 h-14 bg-amber-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <Icon size={28} className="text-white" />
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl font-bold text-white mb-3">
                   {service.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-600 mb-6 leading-relaxed">
+                <p className="text-gray-300 mb-6 leading-relaxed">
                   {service.description}
                 </p>
 
                 {/* Features */}
                 <ul className="space-y-2">
                   {service.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm text-gray-700">
-                      <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                    <li key={idx} className="flex items-center gap-2 text-sm text-gray-300">
+                      <div className="w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
                       {feature}
                     </li>
                   ))}
                 </ul>
 
                 {/* Hover Effect Border */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none"></div>
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none"></div>
               </motion.div>
             );
           })}
@@ -123,7 +123,7 @@ export function Services() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center mt-16"
         >
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-300 mb-6">
             Looking for a custom package? Let's discuss your requirements
           </p>
           <button
@@ -131,7 +131,7 @@ export function Services() {
               const element = document.querySelector('#contact');
               if (element) element.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-8 py-4 bg-amber-500 text-white font-semibold rounded-full hover:bg-amber-600 transition-colors shadow-lg shadow-amber-500/30"
+            className="px-8 py-4 bg-orange-500 text-white font-semibold rounded-full hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30"
           >
             Get a Custom Quote
           </button>

@@ -37,7 +37,7 @@ export function Hero() {
           transition={{ duration: 0.6 }}
           className="mb-6"
         >
-          <span className="inline-block text-amber-500 tracking-widest text-xs sm:text-sm uppercase font-semibold mb-4">
+          <span className="inline-block text-orange-600 tracking-widest text-xs sm:text-sm uppercase font-semibold mb-4">
             ✨ Professional Photography & Videography
           </span>
         </motion.div>
@@ -59,7 +59,7 @@ export function Hero() {
                 backgroundPosition: 'center'
               }}
               transition={{ delay: 0.3, duration: 1 }}
-              className="inline-block text-transparent bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text"
+              className="inline-block text-transparent bg-gradient-to-r from-orange-500 to-orange-700 bg-clip-text"
             >
               Creating Stories.
             </motion.span>
@@ -87,7 +87,7 @@ export function Hero() {
             whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(217, 119, 6, 0.4)' }}
             whileTap={{ scale: 0.95 }}
             onClick={() => scrollToSection('#portfolio')}
-            className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 bg-amber-500 text-black font-semibold rounded-full hover:bg-amber-400 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-amber-500/30"
+            className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 bg-orange-500 text-black font-semibold rounded-full hover:bg-orange-400 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30"
           >
             View Portfolio
             <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
@@ -115,9 +115,9 @@ export function Hero() {
               transition={{ duration: 2, repeat: Infinity }}
               className="flex items-center gap-2 text-gray-400 text-sm"
             >
-              <ChevronDown size={20} className="text-amber-500" />
+              <ChevronDown size={20} className="text-orange-600" />
               <span>Scroll to explore</span>
-              <ChevronDown size={20} className="text-amber-500" />
+              <ChevronDown size={20} className="text-orange-600" />
             </motion.div>
           </div>
         </motion.div>
@@ -130,7 +130,7 @@ export function Hero() {
           x: [0, 20, 0]
         }}
         transition={{ duration: 6, repeat: Infinity }}
-        className="absolute top-1/4 right-5 sm:right-10 w-64 h-64 bg-amber-500 rounded-full blur-3xl opacity-10 pointer-events-none"
+        className="absolute top-1/4 right-5 sm:right-10 w-64 h-64 bg-orange-500 rounded-full blur-3xl opacity-10 pointer-events-none"
       />
       <motion.div
         animate={{ 

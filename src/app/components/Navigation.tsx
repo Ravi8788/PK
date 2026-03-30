@@ -30,7 +30,7 @@ export function Navigation() {
           <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('#home'); }} className="flex items-center space-x-2">
             <div className="text-2xl font-bold">
               <span className="text-white">PK</span>
-              <span className="text-amber-500"> Graphics</span>
+              <span className="text-orange-600"> Graphics</span>
             </div>
           </a>
 
@@ -44,7 +44,7 @@ export function Navigation() {
                   e.preventDefault();
                   scrollToSection(item.href);
                 }}
-                className="text-gray-300 hover:text-amber-500 transition-colors text-sm tracking-wide"
+                className="text-gray-300 hover:text-orange-500 transition-colors text-sm tracking-wide"
               >
                 {item.label}
               </a>
@@ -73,7 +73,7 @@ export function Navigation() {
                   e.preventDefault();
                   scrollToSection(item.href);
                 }}
-                className="block text-gray-300 hover:text-amber-500 transition-colors py-2"
+                className="block text-gray-300 hover:text-orange-500 transition-colors py-2"
               >
                 {item.label}
               </a>

@@ -189,7 +189,7 @@ export function Lightbox({ isOpen, onClose, items, currentIndex, onNavigate }: L
                   {currentItem.title}
                 </h3>
                 {currentItem.category && (
-                  <p className="text-amber-500 font-medium mb-2">
+                  <p className="text-orange-600 font-medium mb-2">
                     {currentItem.category}
                   </p>
                 )}
@@ -212,7 +212,7 @@ export function Lightbox({ isOpen, onClose, items, currentIndex, onNavigate }: L
                       }}
                       className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
                         index === currentIndex
-                          ? 'border-amber-500 scale-110'
+                          ? 'border-orange-500 scale-110'
                           : 'border-white/20 hover:border-white/40'
                       }`}
                     >

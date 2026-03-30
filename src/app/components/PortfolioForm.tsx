@@ -118,7 +118,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               placeholder="Enter title"
               required
             />
@@ -131,7 +131,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               required
             >
               <option value="Wedding Shoots">Wedding Shoots</option>
@@ -148,7 +148,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none resize-none"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
               placeholder="Enter description"
               rows={3}
             />
@@ -161,7 +161,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
             <select
               value={mediaType}
               onChange={(e) => setMediaType(e.target.value as 'image' | 'video')}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               required
             >
               <option value="image">Image</option>
@@ -176,7 +176,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
             <select
               value={uploadMethod}
               onChange={(e) => setUploadMethod(e.target.value as 'file' | 'url')}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               required
             >
               <option value="file">Upload File</option>
@@ -193,7 +193,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
                 type="text"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 placeholder={mediaType === 'image' ? 'Enter image URL' : 'https://www.youtube.com/watch?v=... or direct .mp4 URL'}
                 required
               />
@@ -204,7 +204,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
                     ❌ Unsplash doesn't host videos - use direct video URLs only
                   </p>
                   <div className="mt-3 p-3 bg-gray-900/50 rounded-lg text-xs text-gray-400">
-                    <p className="font-semibold text-amber-500 mb-2">💡 Quick tip for testing:</p>
+                    <p className="font-semibold text-orange-600 mb-2">💡 Quick tip for testing:</p>
                     <p className="mb-1">• Use this sample video URL:</p>
                     <p className="font-mono bg-gray-800 px-2 py-1 rounded break-all">
                       https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4
@@ -277,7 +277,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
             <button
               type="submit"
               disabled={uploading}
-              className="flex-1 px-4 py-2 bg-amber-500 text-black font-semibold rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-orange-500 text-black font-semibold rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploading ? 'Uploading...' : 'Add Item'}
             </button>

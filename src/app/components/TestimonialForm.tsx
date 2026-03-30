@@ -79,7 +79,7 @@ export function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               placeholder="Enter client name"
               required
             />
@@ -93,7 +93,7 @@ export function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
               type="text"
               value={formData.role}
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               placeholder="e.g., Wedding Client"
               required
             />
@@ -106,7 +106,7 @@ export function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
             <textarea
               value={formData.text}
               onChange={(e) => setFormData({ ...formData, text: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none resize-none"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none resize-none"
               placeholder="Enter testimonial text"
               rows={4}
               required
@@ -125,7 +125,7 @@ export function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
                   onClick={() => setFormData({ ...formData, rating })}
                   className={`p-2 transition-colors ${
                     rating <= formData.rating
-                      ? 'text-amber-500'
+                      ? 'text-orange-600'
                       : 'text-gray-600'
                   }`}
                 >
@@ -179,7 +179,7 @@ export function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
             <button
               type="submit"
               disabled={uploading}
-              className="flex-1 px-4 py-2 bg-amber-500 text-black font-semibold rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50 disabled:cursor-not-added"
+              className="flex-1 px-4 py-2 bg-orange-500 text-black font-semibold rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-added"
             >
               {uploading ? 'Uploading...' : 'Add Testimonial'}
             </button>

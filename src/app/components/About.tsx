@@ -10,7 +10,7 @@ export function About() {
   ];
 
   return (
-    <section id="about" className="py-24 bg-white">
+    <section id="about" className="py-24 bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Image Section */}
@@ -25,19 +25,19 @@ export function About() {
               <img
                 src="/images/pk-protrait.jpeg"
                 alt="Photographer Profile"
-                className="w-full h-[500px] object-cover"
+                className="w-full h-[560px] md:h-[620px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="text-white">
-                  <p className="text-amber-500 text-sm uppercase tracking-wider mb-1">Founder & Lead Photographer</p>
+                  <p className="text-orange-600 text-sm uppercase tracking-wider mb-1">Founder & Lead Photographer</p>
                   <h3 className="text-2xl font-bold">PK Graphics</h3>
                 </div>
               </div>
             </div>
 
             {/* Decorative Element */}
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-amber-500 rounded-full -z-10 blur-3xl opacity-30"></div>
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-orange-500 rounded-full -z-10 blur-3xl opacity-30"></div>
           </motion.div>
 
           {/* Content Section */}
@@ -48,11 +48,11 @@ export function About() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4">
-              <span className="inline-block text-amber-500 tracking-widest text-sm uppercase mb-2">About Me</span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Passionate About Visual Storytelling</h2>
+              <span className="inline-block text-orange-600 tracking-widest text-sm uppercase mb-2">About Me</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Passionate About Visual Storytelling</h2>
             </div>
 
-            <div className="space-y-4 text-gray-600 leading-relaxed">
+            <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
                 Welcome to PK Graphics, where every frame tells a story. I'm a professional photographer and videographer
                 specializing in weddings, creative shoots, and compelling visual content that captures the essence of your
@@ -72,11 +72,11 @@ export function About() {
               </p>
             </div>
 
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <p className="text-gray-900 font-semibold mb-2">Specializations:</p>
+            <div className="mt-8 pt-8 border-t border-gray-800">
+              <p className="text-white font-semibold mb-2">Specializations:</p>
               <div className="flex flex-wrap gap-2">
                 {['Wedding Photography', 'Videography', 'Reels & Social Media', 'Pre-Wedding Shoots', 'Commercial Photography', 'Event Coverage'].map((skill) => (
-                  <span key={skill} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm">
+                  <span key={skill} className="px-4 py-2 bg-gray-900 text-gray-200 border border-gray-800 rounded-full text-sm">
                     {skill}
                   </span>
                 ))}
@@ -96,12 +96,12 @@ export function About() {
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div key={index} className="text-center p-6 bg-gray-50 rounded-xl hover:bg-amber-50 transition-colors group">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-amber-500 text-white rounded-full mb-4 group-hover:scale-110 transition-transform">
+              <div key={index} className="text-center p-6 bg-gray-900 border border-gray-800 rounded-xl hover:bg-gray-800 transition-colors group">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-orange-500 text-white rounded-full mb-4 group-hover:scale-110 transition-transform">
                   <Icon size={24} />
                 </div>
-                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
+                <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
+                <div className="text-sm text-gray-300">{stat.label}</div>
               </div>
             );
           })}

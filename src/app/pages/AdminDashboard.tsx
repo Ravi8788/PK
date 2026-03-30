@@ -197,7 +197,7 @@ export default function AdminDashboard() {
             <div>
               <h1 className="text-2xl font-bold">
                 <span className="text-white">PK</span>
-                <span className="text-amber-500"> Graphics</span>
+                <span className="text-orange-600"> Graphics</span>
               </h1>
               <p className="text-gray-400 text-sm">Admin Dashboard</p>
             </div>
@@ -236,7 +236,7 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab(id as Tab)}
                 className={`flex items-center gap-2 px-6 py-4 border-b-2 transition-colors whitespace-nowrap text-sm sm:text-base ${
                   activeTab === id
-                    ? 'border-amber-500 text-amber-500'
+                    ? 'border-orange-500 text-orange-600'
                     : 'border-transparent text-gray-400 hover:text-gray-300'
                 }`}
               >
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
               <h2 className="text-2xl font-bold text-white">Portfolio Items</h2>
               <button
                 onClick={() => setShowPortfolioForm(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-amber-500 text-black rounded-lg hover:bg-amber-600 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-black rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <Plus size={20} />
                 Add Item
@@ -274,7 +274,7 @@ export default function AdminDashboard() {
                 <p className="text-gray-500 mb-6">Start building your portfolio by adding your first item</p>
                 <button
                   onClick={() => setShowPortfolioForm(true)}
-                  className="px-6 py-3 bg-amber-500 text-black rounded-lg hover:bg-amber-600 transition-colors inline-flex items-center gap-2"
+                  className="px-6 py-3 bg-orange-500 text-black rounded-lg hover:bg-orange-600 transition-colors inline-flex items-center gap-2"
                 >
                   <Plus size={20} />
                   Add Your First Item
@@ -310,7 +310,7 @@ export default function AdminDashboard() {
               <h2 className="text-2xl font-bold text-white">Reels</h2>
               <button
                 onClick={() => setShowReelForm(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-amber-500 text-black rounded-lg hover:bg-amber-600 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-black rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <Plus size={20} />
                 Add Reel
@@ -327,7 +327,7 @@ export default function AdminDashboard() {
                 <p className="text-gray-500 mb-6">Showcase your video content by adding your first reel</p>
                 <button
                   onClick={() => setShowReelForm(true)}
-                  className="px-6 py-3 bg-amber-500 text-black rounded-lg hover:bg-amber-600 transition-colors inline-flex items-center gap-2"
+                  className="px-6 py-3 bg-orange-500 text-black rounded-lg hover:bg-orange-600 transition-colors inline-flex items-center gap-2"
                 >
                   <Plus size={20} />
                   Add Your First Reel
@@ -363,7 +363,7 @@ export default function AdminDashboard() {
               <h2 className="text-2xl font-bold text-white">Testimonials</h2>
               <button
                 onClick={() => setShowTestimonialForm(true)}
-                className="w-full sm:w-auto px-4 py-2 bg-amber-500 text-black rounded-lg hover:bg-amber-600 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full sm:w-auto px-4 py-2 bg-orange-500 text-black rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <Plus size={20} />
                 Add Testimonial
@@ -380,7 +380,7 @@ export default function AdminDashboard() {
                 <p className="text-gray-500 mb-6">Build trust by showcasing client reviews and feedback</p>
                 <button
                   onClick={() => setShowTestimonialForm(true)}
-                  className="px-6 py-3 bg-amber-500 text-black rounded-lg hover:bg-amber-600 transition-colors inline-flex items-center gap-2"
+                  className="px-6 py-3 bg-orange-500 text-black rounded-lg hover:bg-orange-600 transition-colors inline-flex items-center gap-2"
                 >
                   <Plus size={20} />
                   Add Your First Testimonial
@@ -395,7 +395,7 @@ export default function AdminDashboard() {
                       <div>
                         <h3 className="font-semibold text-white">{item.client_name || item.name}</h3>
                         <p className="text-sm text-gray-400">{item.project_type || item.role}</p>
-                        <p className="text-amber-500 text-sm">Rating: {item.rating}/5</p>
+                        <p className="text-orange-600 text-sm">Rating: {item.rating}/5</p>
                       </div>
                     </div>
                     <p className="text-gray-300 mb-4">"{item.text}"</p>

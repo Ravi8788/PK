@@ -40,7 +40,7 @@ export default function AdminLogin() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2">
             <span className="text-white">PK</span>
-            <span className="text-amber-500"> Graphics</span>
+            <span className="text-orange-600"> Graphics</span>
           </h1>
           <p className="text-gray-400">Admin Portal</p>
         </div>
@@ -50,7 +50,7 @@ export default function AdminLogin() {
             <button
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
-                isLogin ? 'bg-amber-500 text-black' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                isLogin ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
               Sign In
@@ -58,7 +58,7 @@ export default function AdminLogin() {
             <button
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 rounded-lg font-semibold transition-all ${
-                !isLogin ? 'bg-amber-500 text-black' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                !isLogin ? 'bg-orange-500 text-black' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
               Sign Up
@@ -75,7 +75,7 @@ export default function AdminLogin() {
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full pl-11 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+                    className="w-full pl-11 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                     placeholder="Your name"
                     required={!isLogin}
                   />
@@ -91,7 +91,7 @@ export default function AdminLogin() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="admin@pkgraphics.com"
                   required
                 />
@@ -106,7 +106,7 @@ export default function AdminLogin() {
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="••••••••"
                   required
                 />
@@ -122,7 +122,7 @@ export default function AdminLogin() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-amber-500 text-black font-semibold rounded-lg hover:bg-amber-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-orange-500 text-black font-semibold rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
             </button>
@@ -131,7 +131,7 @@ export default function AdminLogin() {
           <div className="mt-6 text-center">
             <button
               onClick={() => navigate('/')}
-              className="text-gray-400 hover:text-amber-500 transition-colors text-sm"
+              className="text-gray-400 hover:text-orange-500 transition-colors text-sm"
             >
               Back to Website
             </button>

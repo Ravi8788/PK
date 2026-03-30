@@ -60,7 +60,7 @@ export function Portfolio() {
   }));
 
   return (
-    <section id="portfolio" className="py-24 bg-gray-50">
+    <section id="portfolio" className="py-24 bg-[#0a0a0a] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -70,13 +70,13 @@ export function Portfolio() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="inline-block text-amber-500 tracking-widest text-sm uppercase mb-2">
+          <span className="inline-block text-orange-600 tracking-widest text-sm uppercase mb-2">
             Portfolio
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             My Creative Work
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-300 max-w-2xl mx-auto">
             Explore a curated collection of my best photography and videography projects
           </p>
         </motion.div>
@@ -95,8 +95,8 @@ export function Portfolio() {
               onClick={() => setActiveFilter(category)}
               className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                 activeFilter === category
-                  ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/30'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
+                  : 'bg-gray-900 text-gray-200 border border-gray-800 hover:bg-gray-800'
               }`}
             >
               {category}
@@ -120,7 +120,7 @@ export function Portfolio() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                className="group relative overflow-hidden rounded-xl bg-gray-900 border border-gray-800 shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer"
                 onClick={() => openLightbox(index)}
               >
                 <div className="aspect-[4/3] overflow-hidden">
@@ -134,18 +134,18 @@ export function Portfolio() {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center">
                   <div className="text-center text-white p-6">
-                    <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 transform scale-0 group-hover:scale-100 transition-transform duration-300">
+                    <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 transform scale-0 group-hover:scale-100 transition-transform duration-300">
                       <ZoomIn size={24} />
                     </div>
                     <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                    <span className="text-sm text-amber-400">{item.category}</span>
+                    <span className="text-sm text-orange-500">{item.category}</span>
                   </div>
                 </div>
 
                 {/* Bottom Info Bar */}
-                <div className="p-4 bg-white">
-                  <h3 className="font-semibold text-gray-900">{item.title}</h3>
-                  <p className="text-sm text-gray-500">{item.category}</p>
+                <div className="p-4 bg-gray-900 border-t border-gray-800">
+                  <h3 className="font-semibold text-white">{item.title}</h3>
+                  <p className="text-sm text-gray-400">{item.category}</p>
                 </div>
               </motion.div>
             ))}
@@ -155,7 +155,7 @@ export function Portfolio() {
         {/* No Results Message */}
         {filteredItems.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">No items found in this category.</p>
+            <p className="text-gray-400">No items found in this category.</p>
           </div>
         )}
       </div>

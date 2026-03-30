@@ -33,7 +33,7 @@ export function Footer() {
           <div>
             <div className="text-2xl font-bold mb-4">
               <span className="text-white">PK</span>
-              <span className="text-amber-500"> Graphics</span>
+              <span className="text-orange-600"> Graphics</span>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
               Capturing moments and creating stories through professional photography and videography.
@@ -75,7 +75,7 @@ export function Footer() {
                   {link.external ? (
                     <a
                       href={link.href}
-                      className="text-gray-400 hover:text-amber-500 transition-colors"
+                      className="text-gray-400 hover:text-orange-500 transition-colors"
                     >
                       {link.label}
                     </a>
@@ -86,7 +86,7 @@ export function Footer() {
                         e.preventDefault();
                         scrollToSection(link.href);
                       }}
-                      className="text-gray-400 hover:text-amber-500 transition-colors"
+                      className="text-gray-400 hover:text-orange-500 transition-colors"
                     >
                       {link.label}
                     </a>
@@ -108,7 +108,7 @@ export function Footer() {
                       e.preventDefault();
                       scrollToSection(service.href);
                     }}
-                    className="text-gray-400 hover:text-amber-500 transition-colors"
+                    className="text-gray-400 hover:text-orange-500 transition-colors"
                   >
                     {service.label}
                   </a>
@@ -122,12 +122,12 @@ export function Footer() {
             <h3 className="font-bold text-lg mb-4">Contact</h3>
             <ul className="space-y-3 text-gray-400">
               <li>
-                <a href="mailto:contact@pkgraphics.com" className="hover:text-amber-500 transition-colors">
+                <a href="mailto:contact@pkgraphics.com" className="hover:text-orange-500 transition-colors">
                   contact@pkgraphics.com
                 </a>
               </li>
               <li>
-                <a href="tel:+1234567890" className="hover:text-amber-500 transition-colors">
+                <a href="tel:+1234567890" className="hover:text-orange-500 transition-colors">
                   +1 (234) 567-890
                 </a>
               </li>
@@ -146,7 +146,7 @@ export function Footer() {
               © {currentYear} PK Graphics. All rights reserved.
             </p>
             <p className="text-gray-400 text-sm flex items-center gap-1">
-              Made with <Heart size={14} className="text-amber-500 fill-amber-500" /> for creative souls
+              Made with <Heart size={14} className="text-orange-600 fill-orange-600" /> for creative souls
             </p>
           </div>
         </div>
