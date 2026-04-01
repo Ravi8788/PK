@@ -1,338 +1,224 @@
-import { getApp, getApps, initializeApp } from 'firebase/app';
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from 'firebase/auth';
-import {
-  get,
-  getDatabase,
-  push,
-  ref,
-  remove,
-  set,
-  update,
-} from 'firebase/database';
+// Cloudinary upload configuration
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
-
-const requiredFirebaseKeys = [
-  'apiKey',
-  'authDomain',
-  'databaseURL',
-  'projectId',
-  'appId',
-] as const;
-
-function isPlaceholderValue(value: string | undefined) {
-  if (!value) return true;
+function isConfigured() {
   return (
-    value.includes('your_') ||
-    value.includes('your-project') ||
-    value.includes('example') ||
-    value === '1234567890' ||
-    value === '1:1234567890:web:abcdef123456'
+    CLOUDINARY_CLOUD_NAME &&
+    !CLOUDINARY_CLOUD_NAME.includes('your_') &&
+    CLOUDINARY_UPLOAD_PRESET &&
+    !CLOUDINARY_UPLOAD_PRESET.includes('your_')
   );
 }
 
-const missingFirebaseKeys = requiredFirebaseKeys.filter((key) =>
-  isPlaceholderValue(firebaseConfig[key]),
-);
-
-const firebaseReady = missingFirebaseKeys.length === 0;
-
-if (!firebaseReady) {
-  console.warn(
-    `Firebase configuration is incomplete. Missing or placeholder env vars: ${missingFirebaseKeys.join(', ')}`,
-  );
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-const app = firebaseReady ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : null;
-const auth = app ? getAuth(app) : null;
-const db = app ? getDatabase(app) : null;
-
-function ensureFirebaseReady() {
-  if (!firebaseReady || !auth || !db) {
-    throw new Error(
-      `Firebase is not configured. Add valid VITE_FIREBASE_* environment variables. Missing: ${missingFirebaseKeys.join(', ')}`,
-    );
-  }
-
-  return { auth, db };
-}
-
-function toArray<T extends object>(snapshotValue: unknown): Array<T & { id: string }> {
-  if (!snapshotValue || typeof snapshotValue !== 'object') {
+function getStoredData(key: string) {
+  try {
+    const data = localStorage.getItem(`pk_${key}`);
+    return data ? JSON.parse(data) : [];
+  } catch {
     return [];
   }
-
-  return Object.entries(snapshotValue as Record<string, T>).map(([id, value]) => ({
-    id,
-    ...value,
-  }));
 }
 
-function sortByCreatedAtDesc<T extends { created_at?: number | string }>(list: T[]) {
-  return [...list].sort((a, b) => {
-    const va =
-      typeof a.created_at === 'number'
-        ? a.created_at
-        : Date.parse(String(a.created_at ?? 0));
-    const vb =
-      typeof b.created_at === 'number'
-        ? b.created_at
-        : Date.parse(String(b.created_at ?? 0));
-    return vb - va;
-  });
+function setStoredData(key: string, data: any[]) {
+  localStorage.setItem(`pk_${key}`, JSON.stringify(data));
 }
 
-export const isBackendConfigured = () => firebaseReady;
+export const isBackendConfigured = () => isConfigured();
 
 export const authAPI = {
-  async signup(email: string, password: string, name: string) {
-    const { auth } = ensureFirebaseReady();
-    let cred;
-
-    try {
-      cred = await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      const code = error?.code as string | undefined;
-      if (code === 'auth/email-already-in-use') {
-        throw new Error('This email is already registered. Please sign in instead.');
-      }
-      if (code === 'auth/invalid-email') {
-        throw new Error('Please enter a valid email address.');
-      }
-      if (code === 'auth/weak-password') {
-        throw new Error('Password is too weak. Use at least 6 characters.');
-      }
-      throw new Error('Sign up failed. Please try again.');
+  async signin(password: string) {
+    if (!ADMIN_PASSWORD || ADMIN_PASSWORD.includes('your_')) {
+      throw new Error('Admin password not configured. Set VITE_ADMIN_PASSWORD in .env');
     }
 
-    if (name) {
-      await updateProfile(cred.user, { displayName: name });
-    }
-
-    return {
-      user: {
-        uid: cred.user.uid,
-        email: cred.user.email,
-        name: cred.user.displayName || name,
-      },
-      token: await cred.user.getIdToken(),
-    };
-  },
-
-  async signin(email: string, password: string) {
-    const { auth } = ensureFirebaseReady();
-    let cred;
-
-    try {
-      cred = await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      const code = error?.code as string | undefined;
-      if (code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password') {
-        throw new Error('Invalid email or password.');
-      }
-      if (code === 'auth/invalid-email') {
-        throw new Error('Please enter a valid email address.');
-      }
-      if (code === 'auth/too-many-requests') {
-        throw new Error('Too many failed attempts. Please try again later.');
-      }
-      throw new Error('Sign in failed. Please try again.');
-    }
-
-    return {
-      user: {
-        uid: cred.user.uid,
-        email: cred.user.email,
-        name: cred.user.displayName || '',
-      },
-      token: await cred.user.getIdToken(),
-    };
-  },
-
-  async getSession() {
-    if (!firebaseReady || !auth) {
-      return null;
-    }
-
-    const user = auth.currentUser;
-    if (user) {
+    if (password === ADMIN_PASSWORD) {
+      localStorage.setItem('pk_admin_token', 'admin-token');
       return {
         user: {
-          uid: user.uid,
-          email: user.email,
-          name: user.displayName || '',
+          uid: 'admin',
+          email: 'admin@pkgraphics.com',
+          name: 'Admin',
         },
-        token: await user.getIdToken(),
+        token: 'admin-token',
       };
     }
 
-    return new Promise<any>((resolve) => {
-      const unsub = onAuthStateChanged(auth, async (currentUser) => {
-        unsub();
-        if (!currentUser) {
-          resolve(null);
-          return;
-        }
+    throw new Error('Invalid password.');
+  },
 
-        resolve({
-          user: {
-            uid: currentUser.uid,
-            email: currentUser.email,
-            name: currentUser.displayName || '',
-          },
-          token: await currentUser.getIdToken(),
-        });
-      });
-    });
+  async getSession() {
+    const token = localStorage.getItem('pk_admin_token');
+    if (token === 'admin-token') {
+      return {
+        user: {
+          uid: 'admin',
+          email: 'admin@pkgraphics.com',
+          name: 'Admin',
+        },
+        token,
+      };
+    }
+    return null;
   },
 
   async signOut() {
-    const { auth } = ensureFirebaseReady();
-    await signOut(auth);
+    localStorage.removeItem('pk_admin_token');
   },
 };
 
 export const storageAPI = {
-  async uploadFile(_file: File, _path: string) {
-    throw new Error('File upload is not configured for this app. Please use URL input instead.');
+  async uploadFile(file: File, _path: string): Promise<string> {
+    if (!isConfigured()) {
+      throw new Error(
+        'Cloudinary is not configured. Set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in .env',
+      );
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Cloudinary upload failed');
+    }
+
+    const data = await response.json();
+    return data.secure_url;
   },
 };
 
+
+
 export const portfolioAPI = {
   async getAll() {
-    if (!firebaseReady || !db) {
-      return [];
-    }
-
-    const snap = await get(ref(db, 'portfolio'));
-    return sortByCreatedAtDesc(toArray(snap.val()));
+    return getStoredData('portfolio');
   },
 
   async add(item: any) {
-    const { db } = ensureFirebaseReady();
-    const node = push(ref(db, 'portfolio'));
-    const payload = {
+    const items = getStoredData('portfolio');
+    const newItem = {
+      id: generateId(),
       ...item,
       created_at: Date.now(),
     };
-    await set(node, payload);
-    return { id: node.key, ...payload };
+    items.unshift(newItem);
+    setStoredData('portfolio', items);
+    return newItem;
   },
 
   async update(id: string, updates: any) {
-    const { db } = ensureFirebaseReady();
-    await update(ref(db, `portfolio/${id}`), updates);
+    const items = getStoredData('portfolio');
+    const index = items.findIndex((item: any) => item.id === id);
+    if (index !== -1) {
+      items[index] = { ...items[index], ...updates };
+      setStoredData('portfolio', items);
+    }
     return { id, ...updates };
   },
 
   async delete(id: string) {
-    const { db } = ensureFirebaseReady();
-    await remove(ref(db, `portfolio/${id}`));
+    let items = getStoredData('portfolio');
+    items = items.filter((item: any) => item.id !== id);
+    setStoredData('portfolio', items);
     return null;
   },
 };
 
 export const reelsAPI = {
   async getAll() {
-    if (!firebaseReady || !db) {
-      return [];
-    }
-
-    const snap = await get(ref(db, 'reels'));
-    return sortByCreatedAtDesc(toArray(snap.val()));
+    return getStoredData('reels');
   },
 
   async add(item: any) {
-    const { db } = ensureFirebaseReady();
-    const node = push(ref(db, 'reels'));
-    const payload = {
+    const items = getStoredData('reels');
+    const newItem = {
+      id: generateId(),
       ...item,
       created_at: Date.now(),
     };
-    await set(node, payload);
-    return { id: node.key, ...payload };
+    items.unshift(newItem);
+    setStoredData('reels', items);
+    return newItem;
   },
 
   async update(id: string, updates: any) {
-    const { db } = ensureFirebaseReady();
-    await update(ref(db, `reels/${id}`), updates);
+    const items = getStoredData('reels');
+    const index = items.findIndex((item: any) => item.id === id);
+    if (index !== -1) {
+      items[index] = { ...items[index], ...updates };
+      setStoredData('reels', items);
+    }
     return { id, ...updates };
   },
 
   async delete(id: string) {
-    const { db } = ensureFirebaseReady();
-    await remove(ref(db, `reels/${id}`));
+    let items = getStoredData('reels');
+    items = items.filter((item: any) => item.id !== id);
+    setStoredData('reels', items);
     return null;
   },
 };
 
 export const testimonialsAPI = {
   async getAll() {
-    if (!firebaseReady || !db) {
-      return [];
-    }
-
-    const snap = await get(ref(db, 'testimonials'));
-    return sortByCreatedAtDesc(toArray(snap.val()));
+    return getStoredData('testimonials');
   },
 
   async add(item: any) {
-    const { db } = ensureFirebaseReady();
-    const node = push(ref(db, 'testimonials'));
-    const payload = {
+    const items = getStoredData('testimonials');
+    const newItem = {
+      id: generateId(),
       ...item,
       created_at: Date.now(),
     };
-    await set(node, payload);
-    return { id: node.key, ...payload };
+    items.unshift(newItem);
+    setStoredData('testimonials', items);
+    return newItem;
   },
 
   async update(id: string, updates: any) {
-    const { db } = ensureFirebaseReady();
-    await update(ref(db, `testimonials/${id}`), updates);
+    const items = getStoredData('testimonials');
+    const index = items.findIndex((item: any) => item.id === id);
+    if (index !== -1) {
+      items[index] = { ...items[index], ...updates };
+      setStoredData('testimonials', items);
+    }
     return { id, ...updates };
   },
 
   async delete(id: string) {
-    const { db } = ensureFirebaseReady();
-    await remove(ref(db, `testimonials/${id}`));
+    let items = getStoredData('testimonials');
+    items = items.filter((item: any) => item.id !== id);
+    setStoredData('testimonials', items);
     return null;
   },
 };
 
 export const contactAPI = {
   async submit(formData: any) {
-    const { db } = ensureFirebaseReady();
-    const node = push(ref(db, 'contacts'));
-    const payload = {
+    const items = getStoredData('contacts');
+    const newItem = {
+      id: generateId(),
       ...formData,
       created_at: Date.now(),
     };
-    await set(node, payload);
-    return { id: node.key, ...payload };
+    items.unshift(newItem);
+    setStoredData('contacts', items);
+    return newItem;
   },
 
   async getAll() {
-    if (!firebaseReady || !db) {
-      return [];
-    }
-
-    const snap = await get(ref(db, 'contacts'));
-    return sortByCreatedAtDesc(toArray(snap.val()));
+    return getStoredData('contacts');
   },
 };
