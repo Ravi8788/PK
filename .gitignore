@@ -24,3 +24,6 @@ vite-dev.err.log
 Thumbs.db
 .vscode/
 P/
+
+# Local Netlify folder
+.netlify
