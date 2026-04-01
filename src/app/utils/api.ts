@@ -32,8 +32,6 @@ const requiredFirebaseKeys = [
   'authDomain',
   'databaseURL',
   'projectId',
-  'storageBucket',
-  'messagingSenderId',
   'appId',
 ] as const;
 
@@ -104,7 +102,24 @@ export const isBackendConfigured = () => firebaseReady;
 export const authAPI = {
   async signup(email: string, password: string, name: string) {
     const { auth } = ensureFirebaseReady();
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    let cred;
+
+    try {
+      cred = await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      const code = error?.code as string | undefined;
+      if (code === 'auth/email-already-in-use') {
+        throw new Error('This email is already registered. Please sign in instead.');
+      }
+      if (code === 'auth/invalid-email') {
+        throw new Error('Please enter a valid email address.');
+      }
+      if (code === 'auth/weak-password') {
+        throw new Error('Password is too weak. Use at least 6 characters.');
+      }
+      throw new Error('Sign up failed. Please try again.');
+    }
+
     if (name) {
       await updateProfile(cred.user, { displayName: name });
     }
@@ -121,7 +136,24 @@ export const authAPI = {
 
   async signin(email: string, password: string) {
     const { auth } = ensureFirebaseReady();
-    const cred = await signInWithEmailAndPassword(auth, email, password);
+    let cred;
+
+    try {
+      cred = await signInWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      const code = error?.code as string | undefined;
+      if (code === 'auth/invalid-credential' || code === 'auth/user-not-found' || code === 'auth/wrong-password') {
+        throw new Error('Invalid email or password.');
+      }
+      if (code === 'auth/invalid-email') {
+        throw new Error('Please enter a valid email address.');
+      }
+      if (code === 'auth/too-many-requests') {
+        throw new Error('Too many failed attempts. Please try again later.');
+      }
+      throw new Error('Sign in failed. Please try again.');
+    }
+
     return {
       user: {
         uid: cred.user.uid,
@@ -176,20 +208,8 @@ export const authAPI = {
 };
 
 export const storageAPI = {
-  async uploadFile(file: File, _path: string) {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        resolve(reader.result as string);
-      };
-
-      reader.onerror = () => {
-        reject(new Error('Failed to read file'));
-      };
-
-      reader.readAsDataURL(file);
-    });
+  async uploadFile(_file: File, _path: string) {
+    throw new Error('File upload is not configured for this app. Please use URL input instead.');
   },
 };
 

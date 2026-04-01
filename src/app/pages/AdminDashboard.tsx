@@ -55,22 +55,17 @@ export default function AdminDashboard() {
   const loadData = async () => {
     setDataLoading(true);
     try {
-      console.log('Loading data for tab:', activeTab);
       if (activeTab === 'portfolio') {
         const data = await portfolioAPI.getAll();
-        console.log('Portfolio data received:', data);
         setPortfolio(data || []);
       } else if (activeTab === 'reels') {
         const data = await reelsAPI.getAll();
-        console.log('Reels data received:', data);
         setReels(data || []);
       } else if (activeTab === 'testimonials') {
         const data = await testimonialsAPI.getAll();
-        console.log('Testimonials data received:', data);
         setTestimonials(data || []);
       } else if (activeTab === 'contact') {
         const data = await contactAPI.getAll();
-        console.log('Contact data received:', data);
         setContacts(data || []);
       }
     } catch (error) {

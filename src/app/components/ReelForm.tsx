@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { X, Upload } from 'lucide-react';
-import { storageAPI } from '@/app/utils/api';
+import { X } from 'lucide-react';
 
 interface ReelFormProps {
   onClose: () => void;
@@ -13,63 +12,24 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
     views: '',
     description: '',
   });
-  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [videoPreview, setVideoPreview] = useState<string>('');
-  const [uploadType, setUploadType] = useState<'file' | 'url'>('url');
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [uploading, setUploading] = useState(false);
-
-  const handleThumbnailSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setThumbnailFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setThumbnailPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Check file size (max 100MB for example)
-      const maxSize = 100 * 1024 * 1024; // 100MB
-      if (file.size > maxSize) {
-        alert('Video file is too large. Maximum size is 100MB.');
-        return;
-      }
-      
-      setVideoFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setVideoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
 
     try {
-      let thumbnailUrlResult = '';
-      let videoUrlResult = '';
+      const thumbnailUrlResult = thumbnailUrl.trim();
+      const videoUrlResult = videoUrl.trim();
 
-      // Upload thumbnail if selected
-      if (thumbnailFile) {
-        thumbnailUrlResult = await storageAPI.uploadFile(thumbnailFile, 'reels');
+      if (!thumbnailUrlResult) {
+        throw new Error('Please enter a thumbnail URL');
       }
 
-      // Handle video based on upload type
-      if (uploadType === 'file' && videoFile) {
-        videoUrlResult = await storageAPI.uploadFile(videoFile, 'reels');
-      } else if (uploadType === 'url') {
-        videoUrlResult = videoUrl;
+      if (!videoUrlResult) {
+        throw new Error('Please enter a video URL');
       }
 
       onSubmit({
@@ -81,7 +41,8 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
       });
     } catch (error) {
       console.error('Error uploading files:', error);
-      alert('Failed to upload files. Please try again.');
+      const message = error instanceof Error ? error.message : 'Failed to upload files. Please try again.';
+      alert(message);
     } finally {
       setUploading(false);
     }
@@ -145,123 +106,47 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Thumbnail Image
+              Thumbnail URL
             </label>
-            <div className="relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleThumbnailSelect}
-                className="hidden"
-                id="thumbnail-upload"
-                required
-              />
-              <label
-                htmlFor="thumbnail-upload"
-                className="flex flex-col items-center justify-center w-full h-48 bg-gray-700 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
-              >
-                {thumbnailPreview ? (
-                  <img
-                    src={thumbnailPreview}
-                    alt="Preview"
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <Upload size={48} className="text-gray-400 mb-2" />
-                    <p className="text-gray-400">Click to upload thumbnail</p>
-                  </div>
-                )}
-              </label>
-            </div>
+            <input
+              type="url"
+              value={thumbnailUrl}
+              onChange={(e) => setThumbnailUrl(e.target.value)}
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              placeholder="https://example.com/thumbnail.jpg"
+              required
+            />
+            {thumbnailUrl && (
+              <div className="mt-3 w-full h-48 bg-gray-700 border border-gray-600 rounded-lg overflow-hidden">
+                <img src={thumbnailUrl} alt="Thumbnail preview" className="w-full h-full object-cover" />
+              </div>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Upload Type
+              Video Source
             </label>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => setUploadType('file')}
-                className={`flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors ${
-                  uploadType === 'file' ? 'bg-orange-500 hover:bg-orange-600' : ''
-                }`}
-              >
-                File
-              </button>
-              <button
-                type="button"
-                onClick={() => setUploadType('url')}
-                className={`flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors ${
-                  uploadType === 'url' ? 'bg-orange-500 hover:bg-orange-600' : ''
-                }`}
-              >
-                URL
-              </button>
-            </div>
+            <div className="px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-300">URL only</div>
+            <p className="text-gray-500 text-xs mt-2">Use public URLs only when running with Realtime Database.</p>
           </div>
 
-          {uploadType === 'file' ? (
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Video File
-              </label>
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={handleVideoSelect}
-                  className="hidden"
-                  id="video-upload"
-                  required
-                />
-                <label
-                  htmlFor="video-upload"
-                  className="flex flex-col items-center justify-center w-full h-48 bg-gray-700 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
-                >
-                  {videoPreview ? (
-                    <video
-                      src={videoPreview}
-                      className="w-full h-full object-cover rounded-lg"
-                      controls
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <Upload size={48} className="text-gray-400 mb-2" />
-                      <p className="text-gray-400">Click to upload video</p>
-                      <p className="text-gray-500 text-xs mt-2">Max 100MB - MP4, WebM, MOV</p>
-                    </div>
-                  )}
-                </label>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Video URL
-              </label>
-              <input
-                type="url"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                placeholder="https://www.youtube.com/watch?v=... or direct .mp4 URL"
-                required
-              />
-              <p className="text-gray-500 text-xs mt-2">
-                ✅ YouTube, Vimeo, or direct video file URLs (.mp4, .webm)<br/>
-                ❌ Unsplash doesn't host videos - use direct video URLs only
-              </p>
-              <div className="mt-3 p-3 bg-gray-900/50 rounded-lg text-xs text-gray-400">
-                <p className="font-semibold text-orange-600 mb-2">💡 Quick tip for testing:</p>
-                <p className="mb-1">• Use this sample video URL:</p>
-                <p className="font-mono bg-gray-800 px-2 py-1 rounded break-all">
-                  https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4
-                </p>
-              </div>
-            </div>
-          )}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Video URL
+            </label>
+            <input
+              type="url"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              placeholder="https://www.youtube.com/watch?v=... or direct .mp4 URL"
+              required
+            />
+            <p className="text-gray-500 text-xs mt-2">
+              Supported: YouTube, Vimeo, or direct video URLs (.mp4, .webm).
+            </p>
+          </div>
 
           <div className="flex gap-3 pt-4">
             <button

@@ -67,16 +67,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
           throw new Error('Please enter an image URL');
         }
       } else {
-        // Upload file to storage
-        if (mediaType === 'image' && imageFile) {
-          mediaUrl = await storageAPI.uploadFile(imageFile, 'portfolio');
-        } else if (mediaType === 'video' && videoFile) {
-          mediaUrl = await storageAPI.uploadFile(videoFile, 'portfolio');
-        }
-        
-        if (!mediaUrl) {
-          throw new Error('Failed to upload file. Please try using "Enter URL" method instead.');
-        }
+        throw new Error('File upload is disabled. Please use "Enter URL" method.');
       }
 
       if (!mediaUrl) {
@@ -92,6 +83,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
       console.error('Error uploading media:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to upload media';
       alert(`Upload failed: ${errorMessage}\n\nTip: Use "Enter URL" method and paste an image URL from:\n- Unsplash.com\n- Your Google Drive (public link)\n- Any direct image URL`);
+    } finally {
       setUploading(false);
     }
   };
@@ -183,9 +175,10 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               required
             >
-              <option value="file">Upload File</option>
+              <option value="file" disabled>Upload File (Disabled)</option>
               <option value="url">Enter URL</option>
             </select>
+            <p className="text-gray-500 text-xs mt-2">Use public image/video URLs for Realtime Database mode.</p>
           </div>
 
           {uploadMethod === 'url' && (

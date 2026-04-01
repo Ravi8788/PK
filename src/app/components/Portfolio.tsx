@@ -22,6 +22,7 @@ export function Portfolio() {
   const [loading, setLoading] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     loadPortfolio();
@@ -48,6 +49,10 @@ export function Portfolio() {
   const openLightbox = (index: number) => {
     setCurrentImageIndex(index);
     setLightboxOpen(true);
+  };
+
+  const handleImageError = (itemId: string) => {
+    setFailedImages((prev) => ({ ...prev, [itemId]: true }));
   };
 
   const lightboxItems = filteredItems.map(item => ({
@@ -123,12 +128,23 @@ export function Portfolio() {
                 className="group relative overflow-hidden rounded-xl bg-gray-900 border border-gray-800 shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer"
                 onClick={() => openLightbox(index)}
               >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={item.image_url || item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
+                <div className="aspect-[4/3] overflow-hidden bg-[#070d1f]">
+                  {failedImages[item.id] ? (
+                    <div className="w-full h-full flex items-center justify-center text-center p-4 text-gray-400">
+                      <div>
+                        <p className="text-sm">Image unavailable</p>
+                        <p className="text-xs text-gray-500 mt-1">{item.title}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <img
+                      src={item.image_url || item.image}
+                      alt={item.title}
+                      loading="lazy"
+                      onError={() => handleImageError(item.id)}
+                      className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                    />
+                  )}
                 </div>
                 
                 {/* Overlay */}

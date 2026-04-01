@@ -1,0 +1,38 @@
+{
+  "rules": {
+    "portfolio": {
+      ".read": true,
+      "$id": {
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['title','category','image_url','created_at'])"
+      },
+      ".indexOn": ["created_at", "category"]
+    },
+    "reels": {
+      ".read": true,
+      "$id": {
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['title','video_url','thumbnail_url','created_at'])"
+      },
+      ".indexOn": ["created_at"]
+    },
+    "testimonials": {
+      ".read": true,
+      "$id": {
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['name','text','rating','created_at'])"
+      },
+      ".indexOn": ["created_at", "rating"]
+    },
+    "contacts": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['name','email','message','created_at'])"
+      },
+      ".indexOn": ["created_at", "email"]
+    },
+    ".read": false,
+    ".write": false
+  }
+}
