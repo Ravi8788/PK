@@ -23,7 +23,7 @@ export function About() {
           >
             <div className="relative overflow-hidden rounded-2xl shadow-2xl">
               <img
-                src="/images/pkcon.jpg"
+                src="/images/pk-protrait.jpeg"
                 alt="Photographer Profile"
                 className="w-full h-[560px] md:h-[620px] object-cover"
               />
