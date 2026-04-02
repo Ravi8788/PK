@@ -58,19 +58,22 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
     try {
       let thumbnailUrlResult = '';
       let videoUrlResult = '';
+      const trimmedThumbnailUrl = thumbnailUrl.trim();
+      const trimmedVideoUrl = videoUrl.trim();
 
-      if (uploadMethod === 'url') {
-        thumbnailUrlResult = thumbnailUrl.trim();
-        videoUrlResult = videoUrl.trim();
-
-        if (!thumbnailUrlResult) {
+      // URL input is always available. If both URLs are present, use them directly.
+      if (trimmedThumbnailUrl || trimmedVideoUrl) {
+        if (!trimmedThumbnailUrl) {
           throw new Error('Please enter a thumbnail URL');
         }
 
-        if (!videoUrlResult) {
+        if (!trimmedVideoUrl) {
           throw new Error('Please enter a video URL');
         }
-      } else {
+
+        thumbnailUrlResult = trimmedThumbnailUrl;
+        videoUrlResult = trimmedVideoUrl;
+      } else if (uploadMethod === 'file') {
         // Upload files using Cloudinary
         if (!thumbnailFile) {
           throw new Error('Please select a thumbnail image');
@@ -81,6 +84,8 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
 
         thumbnailUrlResult = await storageAPI.uploadFile(thumbnailFile, 'image');
         videoUrlResult = await storageAPI.uploadFile(videoFile, 'video');
+      } else {
+        throw new Error('Please enter thumbnail and video URLs, or switch to Upload File and select files.');
       }
 
       onSubmit({
@@ -171,45 +176,44 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
             </select>
           </div>
 
-          {uploadMethod === 'url' && (
-            <>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Thumbnail URL
-                </label>
-                <input
-                  type="url"
-                  value={thumbnailUrl}
-                  onChange={(e) => setThumbnailUrl(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  placeholder="https://example.com/thumbnail.jpg"
-                  required
-                />
-                {thumbnailUrl && (
-                  <div className="mt-3 w-full h-48 bg-gray-700 border border-gray-600 rounded-lg overflow-hidden">
-                    <img src={thumbnailUrl} alt="Thumbnail preview" className="w-full h-full object-cover" />
-                  </div>
-                )}
-              </div>
+          <div className="rounded-lg border border-gray-700 p-4 space-y-3">
+            <p className="text-sm font-medium text-gray-300">Enter URL (always available)</p>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Thumbnail URL
+              </label>
+              <input
+                type="url"
+                value={thumbnailUrl}
+                onChange={(e) => setThumbnailUrl(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+                placeholder="https://example.com/thumbnail.jpg"
+                required={uploadMethod === 'url'}
+              />
+              {thumbnailUrl && (
+                <div className="mt-3 w-full h-48 bg-gray-700 border border-gray-600 rounded-lg overflow-hidden">
+                  <img src={thumbnailUrl} alt="Thumbnail preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Video URL
-                </label>
-                <input
-                  type="url"
-                  value={videoUrl}
-                  onChange={(e) => setVideoUrl(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
-                  placeholder="https://www.youtube.com/watch?v=... or direct .mp4 URL"
-                  required
-                />
-                <p className="text-gray-500 text-xs mt-2">
-                  Supported: YouTube, Vimeo, or direct video URLs (.mp4, .webm).
-                </p>
-              </div>
-            </>
-          )}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Video URL
+              </label>
+              <input
+                type="url"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+                placeholder="https://www.youtube.com/watch?v=... or direct .mp4 URL"
+                required={uploadMethod === 'url'}
+              />
+              <p className="text-gray-500 text-xs mt-2">
+                Supported: YouTube, Vimeo, or direct video URLs (.mp4, .webm).
+              </p>
+            </div>
+          </div>
 
           {uploadMethod === 'file' && (
             <>
