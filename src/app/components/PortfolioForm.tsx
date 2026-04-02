@@ -275,6 +275,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
                   onChange={(e) => setThumbnailUrl(e.target.value)}
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                   placeholder="Enter thumbnail image URL"
+                  required={uploadMethod === 'url'}
                 />
               ) : (
                 <div className="relative">

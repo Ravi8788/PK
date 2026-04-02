@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Play, Instagram } from 'lucide-react';
+import { Play, Instagram, ExternalLink } from 'lucide-react';
 import { reelsAPI } from '@/app/utils/api';
 import { Lightbox } from './Lightbox';
 
@@ -103,7 +103,21 @@ export function Reels() {
 
               {/* Info at Bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-4">
-                <h3 className="font-semibold text-sm mb-1 line-clamp-2">{reel.title}</h3>
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <h3 className="font-semibold text-sm line-clamp-2 flex-1">{reel.title}</h3>
+                  {(reel.video_url || reel.videoUrl) && (
+                    <a
+                      href={reel.video_url || reel.videoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex-shrink-0 p-1 hover:bg-orange-500/20 rounded transition-colors"
+                      title="Open video URL"
+                    >
+                      <ExternalLink size={14} className="text-orange-400 hover:text-orange-300" />
+                    </a>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 text-xs text-gray-300">
                   <Instagram size={14} />
                   <span>{reel.views} views</span>
