@@ -150,7 +150,7 @@ export function Contact() {
             {/* Image */}
             <div className="mt-8 rounded-2xl overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1588420635201-3a9e2a2a0a07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaG90b2dyYXBoeSUyMHN0dWRpbyUyMGVxdWlwbWVudCUyMGNhbWVyYXxlbnwxfHx8fDE3Njk1MzQ2Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                src="/images/pkcon.jpg"
                 alt="Studio"
                 className="w-full h-64 object-cover"
               />
