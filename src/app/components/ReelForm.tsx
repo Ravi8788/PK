@@ -17,6 +17,7 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [videoUrl, setVideoUrl] = useState('');
+  const [instagramUrl, setInstagramUrl] = useState('');
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>('');
   const [uploadMethod, setUploadMethod] = useState<'url' | 'file'>('url');
@@ -60,6 +61,7 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
       let videoUrlResult = '';
       const trimmedThumbnailUrl = thumbnailUrl.trim();
       const trimmedVideoUrl = videoUrl.trim();
+      const trimmedInstagramUrl = instagramUrl.trim();
 
       if (trimmedThumbnailUrl) {
         thumbnailUrlResult = trimmedThumbnailUrl;
@@ -67,12 +69,19 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
         thumbnailUrlResult = await storageAPI.uploadFile(thumbnailFile, 'image');
       }
 
-      if (trimmedVideoUrl) {
+      if (uploadMethod === 'file') {
+        // In file mode, always prioritize uploaded video for in-app playback.
+        if (videoFile) {
+          videoUrlResult = await storageAPI.uploadFile(videoFile, 'video');
+        } else if (trimmedVideoUrl) {
+          videoUrlResult = trimmedVideoUrl;
+        } else {
+          throw new Error('Please upload a video file or provide a video URL.');
+        }
+      } else if (trimmedVideoUrl) {
         videoUrlResult = trimmedVideoUrl;
-      } else if (uploadMethod === 'file' && videoFile) {
-        videoUrlResult = await storageAPI.uploadFile(videoFile, 'video');
       } else {
-        throw new Error('Please provide a video URL or upload a video file.');
+        throw new Error('Please provide a video URL.');
       }
 
       onSubmit({
@@ -81,6 +90,7 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
         description: formData.description,
         thumbnail_url: thumbnailUrlResult,
         video_url: videoUrlResult,
+        instagram_url: trimmedInstagramUrl || undefined,
       });
     } catch (error) {
       console.error('Error uploading files:', error);
@@ -185,7 +195,7 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Video URL
+                Video URL (for player)
               </label>
               <input
                 type="url"
@@ -197,6 +207,19 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
               <p className="text-gray-500 text-xs mt-2">
                 Supported: YouTube, Vimeo, or direct video URLs (.mp4, .webm).
               </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Instagram URL (for corner button)
+              </label>
+              <input
+                type="url"
+                value={instagramUrl}
+                onChange={(e) => setInstagramUrl(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+                placeholder="https://www.instagram.com/reel/..."
+              />
             </div>
           </div>
 

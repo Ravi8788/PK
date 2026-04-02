@@ -13,6 +13,7 @@ interface Reel {
   description?: string;
   videoUrl?: string;
   video_url?: string;
+  instagram_url?: string;
 }
 
 export function Reels() {
@@ -42,7 +43,15 @@ export function Reels() {
     setLightboxOpen(true);
   };
 
+  const isInstagramUrl = (url: string) => /instagram\.com/i.test(url);
   const getReelVideoUrl = (reel: Reel) => reel.video_url || reel.videoUrl || '';
+  const getReelInstagramUrl = (reel: Reel) => {
+    const explicitInstagramUrl = reel.instagram_url || '';
+    if (explicitInstagramUrl) return explicitInstagramUrl;
+
+    const fallbackVideoUrl = getReelVideoUrl(reel);
+    return isInstagramUrl(fallbackVideoUrl) ? fallbackVideoUrl : '';
+  };
 
   const lightboxItems = reels.map(reel => ({
     id: reel.id,
@@ -119,9 +128,9 @@ export function Reels() {
               </div>
 
               {/* Instagram Icon Badge */}
-              {getReelVideoUrl(reel) ? (
+              {getReelInstagramUrl(reel) ? (
                 <a
-                  href={getReelVideoUrl(reel)}
+                  href={getReelInstagramUrl(reel)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
