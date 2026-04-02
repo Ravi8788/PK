@@ -17,6 +17,10 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
   const [imagePreview, setImagePreview] = useState<string>('');
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>('');
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
+  const [thumbnailMethod, setThumbnailMethod] = useState<'file' | 'url'>('url');
+  const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [mediaType, setMediaType] = useState<'image' | 'video'>('image');
   const [uploadMethod, setUploadMethod] = useState<'file' | 'url'>('url');
   const [imageUrl, setImageUrl] = useState('');
@@ -37,10 +41,10 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Check file size (max 100MB)
-      const maxSize = 100 * 1024 * 1024;
+      // Check file size (max 150MB)
+      const maxSize = 150 * 1024 * 1024;
       if (file.size > maxSize) {
-        alert('Video file is too large. Maximum size is 100MB.');
+        alert('Video file is too large. Maximum size is 150MB.');
         return;
       }
       
@@ -53,12 +57,25 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
     }
   };
 
+  const handleThumbnailSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setThumbnailFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setThumbnailPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
 
     try {
       let mediaUrl = '';
+      let thumbnailMediaUrl = '';
 
       if (uploadMethod === 'url') {
         // Use the URL directly
@@ -67,17 +84,32 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
           throw new Error('Please enter an image URL');
         }
       } else {
-        throw new Error('File upload is disabled. Please use "Enter URL" method.');
+        // Upload file using Cloudinary
+        const fileToUpload = mediaType === 'image' ? imageFile : videoFile;
+        if (!fileToUpload) {
+          throw new Error(`Please select a ${mediaType} file`);
+        }
+        mediaUrl = await storageAPI.uploadFile(fileToUpload, mediaType);
       }
 
       if (!mediaUrl) {
         throw new Error('Please provide an image');
       }
 
-      // Submit data - only images for now (no media_type column)
+      if (mediaType === 'video') {
+        if (thumbnailMethod === 'url' && thumbnailUrl.trim()) {
+          thumbnailMediaUrl = thumbnailUrl.trim();
+        } else if (thumbnailMethod === 'file' && thumbnailFile) {
+          thumbnailMediaUrl = await storageAPI.uploadFile(thumbnailFile, 'image');
+        }
+      }
+
       onSubmit({
         ...formData,
         image_url: mediaUrl,
+        image: mediaUrl,
+        media_type: mediaType,
+        thumbnail_url: thumbnailMediaUrl || undefined,
       });
     } catch (error) {
       console.error('Error uploading media:', error);
@@ -155,7 +187,15 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
             <select
               id="portfolio-media-type"
               value={mediaType}
-              onChange={(e) => setMediaType(e.target.value as 'image' | 'video')}
+              onChange={(e) => {
+                const nextType = e.target.value as 'image' | 'video';
+                setMediaType(nextType);
+                if (nextType === 'image') {
+                  setThumbnailFile(null);
+                  setThumbnailPreview('');
+                  setThumbnailUrl('');
+                }
+              }}
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               required
             >
@@ -175,10 +215,9 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
               required
             >
-              <option value="file" disabled>Upload File (Disabled)</option>
               <option value="url">Enter URL</option>
+              <option value="file">Upload File</option>
             </select>
-            <p className="text-gray-500 text-xs mt-2">Use public image/video URLs for Realtime Database mode.</p>
           </div>
 
           {uploadMethod === 'url' && (
@@ -208,6 +247,61 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
                     </p>
                   </div>
                 </>
+              )}
+            </div>
+          )}
+
+          {mediaType === 'video' && (
+            <div className="space-y-3 rounded-lg border border-gray-700 p-4">
+              <label htmlFor="portfolio-thumbnail-method" className="block text-sm font-medium text-gray-300">
+                Video Thumbnail (Optional)
+              </label>
+
+              <select
+                id="portfolio-thumbnail-method"
+                value={thumbnailMethod}
+                onChange={(e) => setThumbnailMethod(e.target.value as 'file' | 'url')}
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+              >
+                <option value="url">Enter Thumbnail URL</option>
+                <option value="file">Upload Thumbnail</option>
+              </select>
+
+              {thumbnailMethod === 'url' ? (
+                <input
+                  type="text"
+                  value={thumbnailUrl}
+                  onChange={(e) => setThumbnailUrl(e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+                  placeholder="Enter thumbnail image URL"
+                />
+              ) : (
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleThumbnailSelect}
+                    className="hidden"
+                    id="thumbnail-upload"
+                  />
+                  <label
+                    htmlFor="thumbnail-upload"
+                    className="flex flex-col items-center justify-center w-full h-40 bg-gray-700 border-2 border-dashed border-gray-600 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                  >
+                    {thumbnailPreview ? (
+                      <img
+                        src={thumbnailPreview}
+                        alt="Thumbnail preview"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <Upload size={40} className="text-gray-400 mb-2" />
+                        <p className="text-gray-400">Click to upload thumbnail</p>
+                      </div>
+                    )}
+                  </label>
+                </div>
               )}
             </div>
           )}

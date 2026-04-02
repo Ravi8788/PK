@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS portfolio (
   category TEXT NOT NULL,
   description TEXT,
   image_url TEXT,
+  thumbnail_url TEXT,
   media_type TEXT NOT NULL DEFAULT 'image',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

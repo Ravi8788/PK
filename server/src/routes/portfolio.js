@@ -10,30 +10,31 @@ router.get('/', async (_req, res) => {
 });
 
 router.post('/', requireAuth, async (req, res) => {
-  const { title, category, description, image_url, media_type } = req.body;
+  const { title, category, description, image_url, thumbnail_url, media_type } = req.body;
   if (!title || !category || !image_url) {
     return res.status(400).json({ error: 'title, category, image_url are required' });
   }
 
   const result = await query(
-    'INSERT INTO portfolio (title, category, description, image_url, media_type) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-    [title, category, description || null, image_url, media_type || 'image']
+    'INSERT INTO portfolio (title, category, description, image_url, thumbnail_url, media_type) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+    [title, category, description || null, image_url, thumbnail_url || null, media_type || 'image']
   );
   res.status(201).json(result.rows[0]);
 });
 
 router.put('/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
-  const { title, category, description, image_url, media_type } = req.body;
+  const { title, category, description, image_url, thumbnail_url, media_type } = req.body;
   const result = await query(
     `UPDATE portfolio
      SET title = COALESCE($1, title),
          category = COALESCE($2, category),
          description = COALESCE($3, description),
          image_url = COALESCE($4, image_url),
-         media_type = COALESCE($5, media_type)
-     WHERE id = $6 RETURNING *`,
-    [title, category, description, image_url, media_type, id]
+         thumbnail_url = COALESCE($5, thumbnail_url),
+         media_type = COALESCE($6, media_type)
+     WHERE id = $7 RETURNING *`,
+    [title, category, description, image_url, thumbnail_url, media_type, id]
   );
 
   if (result.rows.length === 0) {

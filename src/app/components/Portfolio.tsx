@@ -12,6 +12,7 @@ interface PortfolioItem {
   category: string;
   image: string;
   image_url?: string;
+  thumbnail_url?: string;
   description?: string;
   media_type?: 'image' | 'video';
 }
@@ -51,13 +52,32 @@ export function Portfolio() {
     setLightboxOpen(true);
   };
 
-  const handleImageError = (itemId: string) => {
-    setFailedImages((prev) => ({ ...prev, [itemId]: true }));
+  const handleImageError = (key: string) => {
+    setFailedImages((prev) => ({ ...prev, [key]: true }));
+  };
+
+  const isVideoUrl = (url: string) => {
+    if (!url) {
+      return false;
+    }
+    return (
+      /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(url) ||
+      /\/video\/upload\//i.test(url) ||
+      /youtube\.com|youtu\.be|vimeo\.com/i.test(url)
+    );
+  };
+
+  const getMediaType = (item: PortfolioItem): 'image' | 'video' => {
+    const src = item.image_url || item.image || '';
+    if (item.media_type === 'video' || isVideoUrl(src)) {
+      return 'video';
+    }
+    return 'image';
   };
 
   const lightboxItems = filteredItems.map(item => ({
     id: item.id,
-    type: (item.media_type === 'video' ? 'video' : 'image') as 'image' | 'video',
+    type: getMediaType(item),
     src: item.image_url || item.image,
     title: item.title,
     category: item.category,
@@ -119,7 +139,14 @@ export function Portfolio() {
             transition={{ duration: 0.3 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {filteredItems.map((item, index) => (
+            {filteredItems.map((item, index) => {
+              const mediaSrc = item.image_url || item.image;
+              const mediaType = getMediaType(item);
+              const thumbnailSrc = item.thumbnail_url || '';
+              const thumbnailFailedKey = `${item.id}-thumbnail`;
+              const videoFailedKey = `${item.id}-video`;
+
+              return (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -129,16 +156,42 @@ export function Portfolio() {
                 onClick={() => openLightbox(index)}
               >
                 <div className="aspect-[4/3] overflow-hidden bg-[#070d1f]">
-                  {failedImages[item.id] ? (
+                  {(!mediaSrc && !thumbnailSrc) ? (
                     <div className="w-full h-full flex items-center justify-center text-center p-4 text-gray-400">
                       <div>
-                        <p className="text-sm">Image unavailable</p>
+                        <p className="text-sm">{mediaType === 'video' ? 'Video unavailable' : 'Image unavailable'}</p>
                         <p className="text-xs text-gray-500 mt-1">{item.title}</p>
                       </div>
                     </div>
+                  ) : mediaType === 'video' ? (
+                    thumbnailSrc && !failedImages[thumbnailFailedKey] ? (
+                      <img
+                        src={thumbnailSrc}
+                        alt={`${item.title} thumbnail`}
+                        loading="lazy"
+                        onError={() => handleImageError(thumbnailFailedKey)}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : failedImages[videoFailedKey] || !mediaSrc ? (
+                      <div className="w-full h-full flex items-center justify-center text-center p-4 text-gray-400">
+                        <div>
+                          <p className="text-sm">Video unavailable</p>
+                          <p className="text-xs text-gray-500 mt-1">{item.title}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <video
+                        src={mediaSrc}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        muted
+                        playsInline
+                        preload="metadata"
+                        onError={() => handleImageError(videoFailedKey)}
+                      />
+                    )
                   ) : (
                     <img
-                      src={item.image_url || item.image}
+                      src={mediaSrc}
                       alt={item.title}
                       loading="lazy"
                       onError={() => handleImageError(item.id)}
@@ -164,7 +217,8 @@ export function Portfolio() {
                   <p className="text-sm text-gray-400">{item.category}</p>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </motion.div>
         </AnimatePresence>
 

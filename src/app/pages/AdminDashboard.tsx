@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { authAPI, portfolioAPI, reelsAPI, testimonialsAPI, contactAPI } from '@/app/utils/api';
-import { Plus, Trash2, LogOut, Image, Video, MessageSquare, Mail, ExternalLink } from 'lucide-react';
+import { Plus, Trash2, LogOut, Image, Video, MessageSquare, Mail, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { PortfolioForm } from '@/app/components/PortfolioForm';
 import { ReelForm } from '@/app/components/ReelForm';
@@ -34,6 +34,18 @@ export default function AdminDashboard() {
     if (user) {
       loadData();
     }
+  }, [user, activeTab]);
+
+  useEffect(() => {
+    if (!user || activeTab !== 'contact') {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      loadData();
+    }, 10000);
+
+    return () => clearInterval(timer);
   }, [user, activeTab]);
 
   const checkAuth = async () => {
@@ -70,8 +82,9 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error loading data:', error);
-      // Don't show error toast if it's just empty data
-      if (error instanceof Error && !error.message.includes('does not exist')) {
+      if (error instanceof Error && error.message.includes('Missing or insufficient permissions')) {
+        toast.error('Firestore permissions are blocking reads. Update Firestore rules for this collection.');
+      } else if (error instanceof Error && !error.message.includes('does not exist')) {
         toast.error(`Failed to load ${activeTab} data`);
       }
     } finally {
@@ -87,6 +100,39 @@ export default function AdminDashboard() {
     } finally {
       navigate('/admin/login');
     }
+  };
+
+  const refreshAllData = async () => {
+    // Force reload all data from backend
+    setDataLoading(true);
+    try {
+      const [portfolioData, reelsData, testimonialsData, contactsData] = await Promise.all([
+        portfolioAPI.getAll(),
+        reelsAPI.getAll(),
+        testimonialsAPI.getAll(),
+        contactAPI.getAll(),
+      ]);
+      
+      setPortfolio(portfolioData || []);
+      setReels(reelsData || []);
+      setTestimonials(testimonialsData || []);
+      setContacts(contactsData || []);
+    } catch (error) {
+      console.error('Error refreshing all data:', error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
+
+  const isVideoUrl = (url: string) => {
+    if (!url) {
+      return false;
+    }
+    return (
+      /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(url) ||
+      /\/video\/upload\//i.test(url) ||
+      /youtube\.com|youtu\.be|vimeo\.com/i.test(url)
+    );
   };
 
   const handleAddPortfolio = async () => {
@@ -279,7 +325,27 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {portfolio.map((item: any) => (
                   <div key={item.id} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700">
-                    <img src={item.image_url || item.image} alt={item.title} className="w-full h-48 object-cover" />
+                    {item.media_type === 'video' || isVideoUrl(item.image_url || item.image) ? (
+                      item.thumbnail_url ? (
+                        <div className="relative">
+                          <img src={item.thumbnail_url} alt={`${item.title} thumbnail`} className="w-full h-48 object-cover" />
+                          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                            <span className="px-3 py-1 rounded-full bg-black/70 text-white text-xs font-medium">Video</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <video
+                          src={item.image_url || item.image}
+                          className="w-full h-48 object-cover"
+                          controls
+                          preload="metadata"
+                          muted
+                          playsInline
+                        />
+                      )
+                    ) : (
+                      <img src={item.image_url || item.image} alt={item.title} className="w-full h-48 object-cover" />
+                    )}
                     <div className="p-4">
                       <h3 className="font-semibold text-white mb-1">{item.title}</h3>
                       <p className="text-sm text-gray-400 mb-3">{item.category}</p>
@@ -411,7 +477,16 @@ export default function AdminDashboard() {
         {/* Contact Messages */}
         {activeTab === 'contact' && (
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Contact Messages</h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white">Contact Messages</h2>
+              <button
+                onClick={loadData}
+                className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors inline-flex items-center gap-2"
+              >
+                <RefreshCw size={16} />
+                Refresh
+              </button>
+            </div>
             {dataLoading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="text-gray-400">Loading contact messages...</div>
@@ -461,10 +536,9 @@ export default function AdminDashboard() {
               toast.success('Portfolio item added successfully!');
               setShowPortfolioForm(false);
               
-              // Wait a moment for database to update, then reload
-              setTimeout(() => {
-                loadData();
-              }, 500);
+              // Immediately refresh portfolio data
+              const updatedPortfolio = await portfolioAPI.getAll();
+              setPortfolio(updatedPortfolio || []);
             } catch (error) {
               console.error('Error in portfolio submit:', error);
               toast.error('Failed to add portfolio item. Please check console for details.');
@@ -490,10 +564,9 @@ export default function AdminDashboard() {
               toast.success('Reel added successfully!');
               setShowReelForm(false);
               
-              // Wait a moment for database to update, then reload
-              setTimeout(() => {
-                loadData();
-              }, 500);
+              // Immediately refresh reels data
+              const updatedReels = await reelsAPI.getAll();
+              setReels(updatedReels || []);
             } catch (error) {
               console.error('Error in reel submit:', error);
               toast.error('Failed to add reel. Please check console for details.');
@@ -519,10 +592,9 @@ export default function AdminDashboard() {
               toast.success('Testimonial added successfully!');
               setShowTestimonialForm(false);
               
-              // Wait a moment for database to update, then reload
-              setTimeout(() => {
-                loadData();
-              }, 500);
+              // Immediately refresh testimonials data
+              const updatedTestimonials = await testimonialsAPI.getAll();
+              setTestimonials(updatedTestimonials || []);
             } catch (error) {
               console.error('Error in testimonial submit:', error);
               toast.error('Failed to add testimonial. Please check console for details.');
