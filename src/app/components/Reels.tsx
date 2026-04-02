@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Play, Instagram, ExternalLink } from 'lucide-react';
+import { Play, Instagram } from 'lucide-react';
 import { reelsAPI } from '@/app/utils/api';
 import { Lightbox } from './Lightbox';
 
@@ -42,10 +42,12 @@ export function Reels() {
     setLightboxOpen(true);
   };
 
+  const getReelVideoUrl = (reel: Reel) => reel.video_url || reel.videoUrl || '';
+
   const lightboxItems = reels.map(reel => ({
     id: reel.id,
     type: 'video' as const,
-    src: reel.video_url || reel.videoUrl || reel.thumbnail_url || reel.thumbnail,
+    src: getReelVideoUrl(reel),
     title: reel.title,
     description: reel.description,
   }));
@@ -75,18 +77,24 @@ export function Reels() {
         {/* Reels Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {reels.map((reel, index) => (
-            <motion.div
+            <motion.button
               key={reel.id}
+              type="button"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
               className="group relative aspect-[9/16] rounded-2xl overflow-hidden bg-gray-900 cursor-pointer"
-              onClick={() => openLightbox(index)}
+              onClick={() => {
+                if (getReelVideoUrl(reel)) {
+                  openLightbox(index);
+                }
+              }}
+              aria-label={`Play ${reel.title}`}
             >
               {/* Thumbnail */}
               <img
-                src={reel.thumbnail_url || reel.thumbnail}
+                src={reel.thumbnail_url || reel.thumbnail || '/images/logo.png'}
                 alt={reel.title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
@@ -103,21 +111,7 @@ export function Reels() {
 
               {/* Info at Bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-4">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h3 className="font-semibold text-sm line-clamp-2 flex-1">{reel.title}</h3>
-                  {(reel.video_url || reel.videoUrl) && (
-                    <a
-                      href={reel.video_url || reel.videoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex-shrink-0 p-1 hover:bg-orange-500/20 rounded transition-colors"
-                      title="Open video URL"
-                    >
-                      <ExternalLink size={14} className="text-orange-400 hover:text-orange-300" />
-                    </a>
-                  )}
-                </div>
+                <h3 className="font-semibold text-sm mb-1 line-clamp-2">{reel.title}</h3>
                 <div className="flex items-center gap-2 text-xs text-gray-300">
                   <Instagram size={14} />
                   <span>{reel.views} views</span>
@@ -125,10 +119,24 @@ export function Reels() {
               </div>
 
               {/* Instagram Icon Badge */}
-              <div className="absolute top-3 right-3 w-8 h-8 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-lg flex items-center justify-center">
-                <Instagram size={16} className="text-white" />
-              </div>
-            </motion.div>
+              {getReelVideoUrl(reel) ? (
+                <a
+                  href={getReelVideoUrl(reel)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  aria-label={`Open ${reel.title} URL`}
+                  title="Open reel URL"
+                  className="absolute top-3 right-3 w-8 h-8 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-lg flex items-center justify-center"
+                >
+                  <Instagram size={16} className="text-white" />
+                </a>
+              ) : (
+                <div className="absolute top-3 right-3 w-8 h-8 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-lg flex items-center justify-center opacity-70">
+                  <Instagram size={16} className="text-white" />
+                </div>
+              )}
+            </motion.button>
           ))}
         </div>
 
