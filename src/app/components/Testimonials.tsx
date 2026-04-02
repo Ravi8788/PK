@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Star, Quote } from 'lucide-react';
+import { Star, Quote, MessageSquare } from 'lucide-react';
 import { testimonialsAPI } from '@/app/utils/api';
+import { PublicTestimonialForm } from './PublicTestimonialForm';
 
 interface Testimonial {
   id: string;
@@ -18,6 +19,7 @@ interface Testimonial {
 export function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showFormModal, setShowFormModal] = useState(false);
 
   useEffect(() => {
     loadTestimonials();
@@ -33,6 +35,11 @@ export function Testimonials() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFormSuccess = () => {
+    // Reload testimonials after successful submission
+    loadTestimonials();
   };
 
   return (
@@ -103,6 +110,23 @@ export function Testimonials() {
           ))}
         </div>
 
+        {/* Share Your Experience Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-center mt-12"
+        >
+          <button
+            onClick={() => setShowFormModal(true)}
+            className="inline-flex items-center gap-2 px-8 py-4 bg-orange-500 text-white text-lg font-semibold rounded-full hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30"
+          >
+            <MessageSquare size={20} />
+            Share Your Experience
+          </button>
+        </motion.div>
+
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -129,6 +153,13 @@ export function Testimonials() {
           </div>
         </motion.div>
       </div>
+
+      {/* Public Testimonial Form Modal */}
+      <PublicTestimonialForm
+        isOpen={showFormModal}
+        onClose={() => setShowFormModal(false)}
+        onSuccess={handleFormSuccess}
+      />
     </section>
   );
 }
