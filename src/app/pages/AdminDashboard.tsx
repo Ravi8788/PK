@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { authAPI, portfolioAPI, reelsAPI, testimonialsAPI, contactAPI } from '@/app/utils/api';
-import { Plus, Trash2, LogOut, Image, Video, MessageSquare, Mail, RefreshCw } from 'lucide-react';
+import { Plus, Trash2, LogOut, Image, Video, MessageSquare, Mail, RefreshCw, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { PortfolioForm } from '@/app/components/PortfolioForm';
 import { ReelForm } from '@/app/components/ReelForm';
@@ -452,7 +452,13 @@ export default function AdminDashboard() {
                 {testimonials.map((item: any) => (
                   <div key={item.id} className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                     <div className="flex items-center gap-4 mb-4">
-                      <img src={item.client_image || item.image} alt={item.client_name || item.name} className="w-16 h-16 rounded-full object-cover" />
+                      <div className="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        {item.client_image || item.image ? (
+                          <img src={item.client_image || item.image} alt={item.client_name || item.name} className="w-full h-full rounded-full object-cover" />
+                        ) : (
+                          <User size={24} className="text-gray-500" />
+                        )}
+                      </div>
                       <div>
                         <h3 className="font-semibold text-white">{item.client_name || item.name}</h3>
                         <p className="text-sm text-gray-400">{item.project_type || item.role}</p>

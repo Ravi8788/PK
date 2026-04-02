@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Star, Quote, MessageSquare } from 'lucide-react';
+import { Star, Quote, MessageSquare, User } from 'lucide-react';
 import { testimonialsAPI } from '@/app/utils/api';
 import { PublicTestimonialForm } from './PublicTestimonialForm';
 
@@ -94,12 +94,16 @@ export function Testimonials() {
 
               {/* Client Info */}
               <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
-                  <img
-                    src={testimonial.client_image || testimonial.image}
-                    alt={testimonial.client_name || testimonial.name}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-700 flex items-center justify-center flex-shrink-0">
+                  {testimonial.client_image || testimonial.image ? (
+                    <img
+                      src={testimonial.client_image || testimonial.image}
+                      alt={testimonial.client_name || testimonial.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <User size={20} className="text-gray-400" />
+                  )}
                 </div>
                 <div>
                   <h4 className="font-semibold text-white">{testimonial.client_name || testimonial.name}</h4>
