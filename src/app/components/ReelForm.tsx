@@ -61,31 +61,18 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
       const trimmedThumbnailUrl = thumbnailUrl.trim();
       const trimmedVideoUrl = videoUrl.trim();
 
-      // URL input is always available. If both URLs are present, use them directly.
-      if (trimmedThumbnailUrl || trimmedVideoUrl) {
-        if (!trimmedThumbnailUrl) {
-          throw new Error('Please enter a thumbnail URL');
-        }
-
-        if (!trimmedVideoUrl) {
-          throw new Error('Please enter a video URL');
-        }
-
+      if (trimmedThumbnailUrl) {
         thumbnailUrlResult = trimmedThumbnailUrl;
-        videoUrlResult = trimmedVideoUrl;
-      } else if (uploadMethod === 'file') {
-        // Upload files using Cloudinary
-        if (!thumbnailFile) {
-          throw new Error('Please select a thumbnail image');
-        }
-        if (!videoFile) {
-          throw new Error('Please select a video file');
-        }
-
+      } else if (uploadMethod === 'file' && thumbnailFile) {
         thumbnailUrlResult = await storageAPI.uploadFile(thumbnailFile, 'image');
+      }
+
+      if (trimmedVideoUrl) {
+        videoUrlResult = trimmedVideoUrl;
+      } else if (uploadMethod === 'file' && videoFile) {
         videoUrlResult = await storageAPI.uploadFile(videoFile, 'video');
       } else {
-        throw new Error('Please enter thumbnail and video URLs, or switch to Upload File and select files.');
+        throw new Error('Please provide a video URL or upload a video file.');
       }
 
       onSubmit({
@@ -188,7 +175,6 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
                 onChange={(e) => setThumbnailUrl(e.target.value)}
                 className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 placeholder="https://example.com/thumbnail.jpg"
-                required={uploadMethod === 'url'}
               />
               {thumbnailUrl && (
                 <div className="mt-3 w-full h-48 bg-gray-700 border border-gray-600 rounded-lg overflow-hidden">
@@ -207,7 +193,6 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
                 onChange={(e) => setVideoUrl(e.target.value)}
                 className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
                 placeholder="https://www.youtube.com/watch?v=... or direct .mp4 URL"
-                required={uploadMethod === 'url'}
               />
               <p className="text-gray-500 text-xs mt-2">
                 Supported: YouTube, Vimeo, or direct video URLs (.mp4, .webm).
@@ -228,7 +213,6 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
                     onChange={handleThumbnailSelect}
                     className="hidden"
                     id="thumbnail-upload"
-                    required
                   />
                   <label
                     htmlFor="thumbnail-upload"
