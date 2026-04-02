@@ -127,13 +127,15 @@ export function Reels() {
                   onClick={(e) => e.stopPropagation()}
                   aria-label={`Open ${reel.title} URL`}
                   title="Open reel URL"
-                  className="absolute top-3 right-3 w-8 h-8 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-lg flex items-center justify-center"
+                  className="absolute top-3 right-3 px-2 py-1 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-lg flex items-center gap-1"
                 >
                   <Instagram size={16} className="text-white" />
+                  <span className="text-white text-[10px] font-semibold whitespace-nowrap">View on Instagram</span>
                 </a>
               ) : (
-                <div className="absolute top-3 right-3 w-8 h-8 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-lg flex items-center justify-center opacity-70">
+                <div className="absolute top-3 right-3 px-2 py-1 bg-gradient-to-tr from-purple-600 via-pink-600 to-orange-500 rounded-lg flex items-center gap-1 opacity-70">
                   <Instagram size={16} className="text-white" />
+                  <span className="text-white text-[10px] font-semibold whitespace-nowrap">View on Instagram</span>
                 </div>
               )}
             </motion.button>
