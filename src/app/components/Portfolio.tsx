@@ -4,7 +4,7 @@ import { ZoomIn } from 'lucide-react';
 import { portfolioAPI } from '@/app/utils/api';
 import { Lightbox } from './Lightbox';
 
-type Category = 'All' | 'Wedding Shoots' | 'Pre-Wedding Shoots' | 'Reels/Short Videos' | 'Creative/Commercial Shoots';
+type Category = 'All' | 'Wedding Shoots' | 'Pre-Wedding Shoots' | 'Reels/Short Videos' | 'Creative/Commercial Shoots' | 'Other';
 
 interface PortfolioItem {
   id: string;
@@ -41,7 +41,7 @@ export function Portfolio() {
     }
   };
 
-  const categories: Category[] = ['All', 'Wedding Shoots', 'Pre-Wedding Shoots', 'Reels/Short Videos', 'Creative/Commercial Shoots'];
+  const categories: Category[] = ['All', 'Wedding Shoots', 'Pre-Wedding Shoots', 'Reels/Short Videos', 'Creative/Commercial Shoots', 'Other'];
 
   const filteredItems = activeFilter === 'All' 
     ? portfolioItems 

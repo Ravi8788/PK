@@ -164,6 +164,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
               <option value="Pre-Wedding Shoots">Pre-Wedding Shoots</option>
               <option value="Reels/Short Videos">Reels/Short Videos</option>
               <option value="Creative/Commercial Shoots">Creative/Commercial Shoots</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
