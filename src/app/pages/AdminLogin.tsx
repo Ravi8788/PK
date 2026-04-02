@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { authAPI } from '@/app/utils/api';
-import { Lock } from 'lucide-react';
+import { Lock, Mail } from 'lucide-react';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -15,8 +16,7 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      await authAPI.signin(password);
-      localStorage.setItem('pk_admin_token', 'admin-token');
+      await authAPI.signin(email, password);
       navigate('/admin');
     } catch (err: any) {
       setError(err?.message || 'Authentication failed');
@@ -39,7 +39,22 @@ export default function AdminLogin() {
         <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Admin Password</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none"
+                  placeholder="admin@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
