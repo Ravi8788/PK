@@ -145,26 +145,26 @@ export function Hero() {
             <img
               src="/images/logo.png"
               alt="PK Graphics"
-              className="mx-auto h-auto w-24 object-contain sm:w-28 md:w-32"
+              className="mx-auto h-auto w-36 object-contain sm:w-44 md:w-52"
             />
-            <div className="mx-auto mt-2 h-0.5 w-12 bg-acid" />
-            <h1 className="font-display mt-4 text-[clamp(1.35rem,2.6vw,2.15rem)] leading-[1.2] font-semibold tracking-[-0.02em] text-paper">
+            <div className="mx-auto mt-3 h-0.5 w-16 bg-acid" />
+            <h1 className="font-display mt-5 text-[clamp(2rem,4.8vw,3.5rem)] leading-[1.08] font-semibold tracking-[-0.03em] text-paper">
               {siteCopy.hero.line1}
               <span className="mt-1 block text-acid">{siteCopy.hero.line2}</span>
             </h1>
-            <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-paper/85 sm:max-w-lg">
+            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-paper/85 sm:text-lg">
               {siteCopy.hero.support}
             </p>
             <div className="pointer-events-auto mt-6 flex flex-wrap items-center justify-center gap-3">
               <MagneticButton
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-acid px-7 text-sm font-semibold text-ink"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-acid px-8 text-base font-semibold text-ink"
                 onClick={() => scrollToTarget('#portfolio', lenis)}
               >
                 {siteCopy.hero.primaryCta}
                 <ArrowRight size={18} />
               </MagneticButton>
               <MagneticButton
-                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/70 px-7 text-sm font-semibold text-paper"
+                className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/70 px-8 text-base font-semibold text-paper"
                 onClick={() => scrollToTarget('#contact', lenis)}
               >
                 {siteCopy.hero.secondaryCta}
