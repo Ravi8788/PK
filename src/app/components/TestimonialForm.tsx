@@ -39,7 +39,7 @@ export function TestimonialForm({ onClose, onSubmit }: TestimonialFormProps) {
 
       // Upload image if selected
       if (imageFile) {
-        imageUrl = await storageAPI.uploadFile(imageFile, 'testimonials');
+        imageUrl = await storageAPI.uploadFile(imageFile, 'testimonials' as 'image');
       }
 
       onSubmit({

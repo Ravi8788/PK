@@ -69,7 +69,7 @@ function sortByCreatedAtDesc<T extends { created_at?: number }>(items: T[]) {
   return [...items].sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
 }
 
-async function getAllFromCollection(collectionName: string) {
+async function getAllFromCollection(collectionName: string): Promise<any[]> {
   if (!db || !isFirebaseConfigured()) {
     return [];
   }
@@ -80,7 +80,7 @@ async function getAllFromCollection(collectionName: string) {
     ...entry.data(),
   }));
 
-  return sortByCreatedAtDesc(items as Array<{ created_at?: number }>);
+  return sortByCreatedAtDesc(items as Array<{ created_at?: number }>) as any[];
 }
 
 async function addToCollection(collectionName: string, item: any) {

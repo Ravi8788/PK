@@ -25,4 +25,18 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/three') || id.includes('@react-three') || id.includes('three-mesh-bvh')) {
+            return 'three'
+          }
+          if (id.includes('node_modules/firebase') || id.includes('@firebase') || id.includes('node_modules/@firebase')) {
+            return 'firebase'
+          }
+        },
+      },
+    },
+  },
 })

@@ -15,10 +15,10 @@ export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
-  const [portfolio, setPortfolio] = useState([]);
-  const [reels, setReels] = useState([]);
-  const [testimonials, setTestimonials] = useState([]);
-  const [contacts, setContacts] = useState([]);
+  const [portfolio, setPortfolio] = useState<any[]>([]);
+  const [reels, setReels] = useState<any[]>([]);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<any[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
 
   // Form modals

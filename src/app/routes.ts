@@ -1,19 +1,31 @@
+import { createElement, lazy, Suspense, type ComponentType, type LazyExoticComponent } from 'react';
 import { createBrowserRouter } from 'react-router';
-import PublicSite from '@/app/pages/PublicSite';
-import AdminLogin from '@/app/pages/AdminLogin';
-import AdminDashboard from '@/app/pages/AdminDashboard';
+
+const PublicSite = lazy(() => import('@/app/pages/PublicSite'));
+const AdminLogin = lazy(() => import('@/app/pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('@/app/pages/AdminDashboard'));
+
+function screen(Component: LazyExoticComponent<ComponentType>) {
+  return function RouteScreen() {
+    return createElement(
+      Suspense,
+      { fallback: createElement('div', { className: 'min-h-screen bg-black' }) },
+      createElement(Component),
+    );
+  };
+}
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    Component: PublicSite,
+    Component: screen(PublicSite),
   },
   {
     path: '/admin/login',
-    Component: AdminLogin,
+    Component: screen(AdminLogin),
   },
   {
     path: '/admin',
-    Component: AdminDashboard,
+    Component: screen(AdminDashboard),
   },
 ]);
