@@ -1,7 +1,17 @@
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 export function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoReady, setVideoReady] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      videoRef.current?.pause();
+    }
+  }, []);
+
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -23,6 +33,25 @@ export function Hero() {
             src="https://images.unsplash.com/photo-1588420635201-3a9e2a2a0a07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaG90b2dyYXBoeSUyMHN0dWRpbyUyMGVxdWlwbWVudCUyMGNhbWVyYXxlbnwxfHx8fDE3Njk1MzQ2Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
             alt="Photography Equipment"
             className="w-full h-full object-cover"
+          />
+          <video
+            ref={videoRef}
+            src="/hero-loop.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            onCanPlay={() => {
+              setVideoReady(true);
+              if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                videoRef.current?.pause();
+              }
+            }}
+            className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-1000 ease-out ${
+              videoReady ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0'
+            }`}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/85"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.12)_0%,rgba(0,0,0,0.62)_66%,rgba(0,0,0,0.88)_100%)]"></div>

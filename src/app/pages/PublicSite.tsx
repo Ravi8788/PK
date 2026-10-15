@@ -7,41 +7,31 @@ import { Testimonials } from '@/app/components/Testimonials';
 import { Contact } from '@/app/components/Contact';
 import { Footer } from '@/app/components/Footer';
 import { Navigation } from '@/app/components/Navigation';
-import { useState, useEffect } from 'react';
-import { portfolioAPI } from '@/app/utils/api';
+import { Grain } from '@/app/components/public/Grain';
+import { CustomCursor } from '@/app/components/public/CustomCursor';
+import { SmoothScroll } from '@/app/lib/lenis';
 
 export default function PublicSite() {
-  const [hasContent, setHasContent] = useState(true);
-
-  useEffect(() => {
-    checkContent();
-  }, []);
-
-  const checkContent = async () => {
-    try {
-      const data = await portfolioAPI.getAll();
-      setHasContent((data || []).length > 0);
-    } catch (error) {
-      // Error already handled in API layer
-      setHasContent(false);
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-black overflow-x-hidden scroll-smooth">
-      <Navigation />
-      
-      {/* Main scrollable container with proper overflow */}
-      <main className="w-full overflow-y-auto">
-        <Hero />
-        <About />
-        <Portfolio />
-        <Reels />
-        <Services />
-        <Testimonials />
-        <Contact />
-        <Footer />
-      </main>
-    </div>
+    <SmoothScroll>
+      <div className="pk-public min-h-screen overflow-x-clip">
+        <a className="pk-skip" href="#content">
+          Skip to content
+        </a>
+        <Grain />
+        <CustomCursor />
+        <Navigation />
+        <main id="content" className="w-full">
+          <Hero />
+          <About />
+          <Portfolio />
+          <Reels />
+          <Services />
+          <Testimonials />
+          <Contact />
+          <Footer />
+        </main>
+      </div>
+    </SmoothScroll>
   );
 }
