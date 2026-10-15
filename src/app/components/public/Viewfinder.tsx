@@ -1,5 +1,5 @@
-export function Viewfinder({ className = '' }: { className?: string }) {
-  const corner = 'absolute h-10 w-10 border-paper/80 sm:h-14 sm:w-14'
+export function Viewfinder({ className = '', tone = 'paper' }: { className?: string; tone?: 'paper' | 'acid' }) {
+  const corner = `absolute h-8 w-8 sm:h-11 sm:w-11 ${tone === 'acid' ? 'border-acid' : 'border-paper/80'}`
   return (
     <div className={`pointer-events-none absolute inset-4 z-20 sm:inset-6 ${className}`} aria-hidden="true">
       <span className={`${corner} left-0 top-0 border-l-2 border-t-2`} />

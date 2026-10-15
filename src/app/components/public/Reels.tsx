@@ -10,7 +10,7 @@ import { SmartImage } from './SmartImage'
 import { ReelPlayer } from './ReelPlayer'
 
 export function Reels() {
-  const { items, status, usingDemo, reload } = useReelsData()
+  const { items, status, reload } = useReelsData()
   const railRef = useRef<HTMLDivElement>(null)
   const { ref, inView } = useInView<HTMLElement>({ threshold: 0.2 })
   const fine = useMedia('(pointer: fine)')
@@ -66,9 +66,6 @@ export function Reels() {
             {siteCopy.reels.title}
           </h2>
           <p className="mt-4 max-w-xl text-paper-dim">{siteCopy.reels.text}</p>
-          {usingDemo && (
-            <p className="font-meta mt-3 text-[11px] tracking-[0.16em] text-acid uppercase">{siteCopy.emptyDevNote}</p>
-          )}
         </div>
         <a
           href={siteCopy.contact.instagram}

@@ -63,13 +63,13 @@ export function Navbar() {
       >
         <a
           href="#home"
-          className="font-display min-h-11 px-3 text-sm font-semibold tracking-[-0.04em] uppercase"
+          className="inline-flex min-h-11 items-center px-2"
           onClick={(event) => {
             event.preventDefault()
             go('#home')
           }}
         >
-          PK <span className="text-acid">Graphics</span>
+          <img src="/images/logo.png" alt="PK Graphics" className="h-10 w-auto object-contain sm:h-11" />
         </a>
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
           {siteCopy.nav.links.map((item) => {

@@ -1,38 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { siteCopy } from '@/app/content/siteCopy'
-import { gsap } from '@/app/lib/gsap'
 import { scrollToTarget, useLenis } from '@/app/lib/lenis'
-import { useReducedMotion } from '@/app/hooks/useReducedMotion'
 import { Socials } from './Navbar'
 
 export function Footer() {
   const year = new Date().getFullYear()
   const lenis = useLenis()
-  const reduced = useReducedMotion()
-  const word = useRef<HTMLParagraphElement>(null)
   const [flash, setFlash] = useState(false)
-
-  useEffect(() => {
-    if (reduced || !word.current) return
-    const tween = gsap.fromTo(
-      word.current,
-      { clipPath: 'inset(100% 0% 0% 0%)' },
-      {
-        clipPath: 'inset(0% 0% 0% 0%)',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: word.current,
-          start: 'top 95%',
-          end: 'top 55%',
-          scrub: true,
-        },
-      },
-    )
-    return () => {
-      tween.scrollTrigger?.kill()
-      tween.kill()
-    }
-  }, [reduced])
 
   const go = (href: string) => {
     if (href.startsWith('#')) scrollToTarget(href, lenis)
@@ -41,13 +15,7 @@ export function Footer() {
   return (
     <footer className="relative bg-ink px-5 pt-16 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
       {flash && <div className="pointer-events-none absolute inset-0 bg-paper" aria-hidden="true" />}
-      <p
-        ref={word}
-        className="font-display text-[clamp(3rem,16vw,14rem)] leading-[0.8] font-semibold tracking-[-0.05em] uppercase"
-      >
-        {siteCopy.wordmark}
-      </p>
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-6 border-t border-hair pt-6">
+      <div className="flex flex-wrap items-center justify-between gap-6 border-t border-hair pt-6">
         <Socials />
         <nav className="flex flex-wrap gap-x-4 gap-y-2" aria-label="Footer">
           {siteCopy.footer.quickLinks.map((link) =>

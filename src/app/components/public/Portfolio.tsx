@@ -10,7 +10,7 @@ import { SmartImage } from './SmartImage'
 const PAGE = 9
 
 export function Portfolio() {
-  const { items, status, usingDemo, reload } = usePortfolioData()
+  const { items, status, reload } = usePortfolioData()
   const [filter, setFilter] = useState<(typeof siteCopy.categories)[number]>('All')
   const [visible, setVisible] = useState(PAGE)
   const [open, setOpen] = useState(false)
@@ -34,9 +34,6 @@ export function Portfolio() {
           {siteCopy.portfolio.title}
         </h2>
         <p className="mt-4 max-w-xl text-paper-dim">{siteCopy.portfolio.text}</p>
-        {usingDemo && (
-          <p className="font-meta mt-3 text-[11px] tracking-[0.16em] text-acid uppercase">{siteCopy.emptyDevNote}</p>
-        )}
 
         <div className="mt-8 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Portfolio categories">
           {siteCopy.categories.map((category) => {

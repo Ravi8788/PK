@@ -1,14 +1,12 @@
 export const siteCopy = {
   brand: 'PK Graphics',
-  wordmark: 'PK GRAPHICS',
   hero: {
-    subtitle: 'Photography × Cinematography',
+    line1: 'Capturing Moments.',
+    line2: 'Creating Stories.',
     support:
       'Specializing in weddings, creative shoots, and stunning visual content that brings your vision to life',
-    primaryCta: 'See the work',
-    secondaryCta: 'Book a shoot',
-    scrollHint: 'Scroll',
-    meta: '4K · 24FPS',
+    primaryCta: 'View Portfolio',
+    secondaryCta: 'Contact Me',
   },
   nav: {
     cta: 'Book a Shoot',
@@ -141,17 +139,11 @@ export const siteCopy = {
     share: 'Share Your Experience',
     formTitle: 'Share Your Experience',
     success: 'Thank you! Your testimonial has been submitted and will appear after admin approval.',
-    stats: [
-      { value: '98%', label: 'Client Satisfaction' },
-      { value: '4.9/5', label: 'Average Rating' },
-      { value: '300+', label: 'Happy Clients' },
-      { value: '500+', label: 'Projects Done' },
-    ],
   },
   contact: {
     index: '08',
     eyebrow: 'Get in touch',
-    title: "Let's shoot.",
+    title: "Let's Create Something Amazing",
     text: "Have a project in mind? I'd love to hear about it. Send me a message and let's discuss your vision.",
     submit: 'Send Message',
     sending: 'Sending...',
@@ -186,7 +178,6 @@ export const siteCopy = {
       { label: 'Event Coverage', href: '#services' },
     ],
   },
-  emptyDevNote: 'Preview data — not live content',
 } as const
 
 export const publicSections = [

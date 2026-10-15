@@ -8,7 +8,7 @@ import { ShareExperience } from './ShareExperience'
 import { MagneticButton } from './MagneticButton'
 
 export function Testimonials() {
-  const { items, status, usingDemo, reload } = useTestimonialsData()
+  const { items, status, reload } = useTestimonialsData()
   const reduced = useReducedMotion()
   const [open, setOpen] = useState(false)
   const [paused, setPaused] = useState(false)
@@ -25,9 +25,6 @@ export function Testimonials() {
           {siteCopy.testimonials.title}
         </h2>
         <p className="mt-4 max-w-xl text-paper-dim">{siteCopy.testimonials.text}</p>
-        {usingDemo && (
-          <p className="font-meta mt-3 text-[11px] tracking-[0.16em] text-acid uppercase">{siteCopy.emptyDevNote}</p>
-        )}
       </div>
       {status === 'loading' && <div className="mx-5 mt-8 h-40 animate-pulse bg-ink-2" />}
       {status === 'error' && (
@@ -59,14 +56,6 @@ export function Testimonials() {
         >
           {siteCopy.testimonials.share}
         </MagneticButton>
-        <dl className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {siteCopy.testimonials.stats.map((stat) => (
-            <div key={stat.label}>
-              <dt className="font-display text-4xl text-acid">{stat.value}</dt>
-              <dd className="text-sm text-paper-dim">{stat.label}</dd>
-            </div>
-          ))}
-        </dl>
       </div>
       <ShareExperience open={open} onClose={() => setOpen(false)} onSuccess={reload} />
     </section>

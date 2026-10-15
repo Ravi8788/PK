@@ -89,11 +89,7 @@ function TunnelScene({
   const split = useRef(0)
   const skew = useRef(0)
 
-  const urls = useMemo(() => {
-    const next = images.filter(Boolean).slice(0, count)
-    while (next.length < count) next.push('')
-    return next
-  }, [images, count])
+  const urls = useMemo(() => images.filter(Boolean).slice(0, count), [images, count])
 
   useFrame((_, delta) => {
     if (autoDrift) {

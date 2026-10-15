@@ -12,7 +12,7 @@ import { SmartImage } from './SmartImage'
 const CurvedWall = lazy(() => import('@/app/three/CurvedWall'))
 
 export function Featured() {
-  const { items, status, usingDemo } = usePortfolioData()
+  const { items, status } = usePortfolioData()
   const images = items
     .map((item, index) => ({ item, index }))
     .filter(({ item }) => portfolioType(item) === 'image' && portfolioSrc(item))
@@ -35,7 +35,6 @@ export function Featured() {
           {siteCopy.featured.title}
         </h2>
         <p className="mt-4 max-w-xl text-paper-dim">{siteCopy.featured.text}</p>
-        {usingDemo && <p className="font-meta mt-3 text-[11px] tracking-[0.16em] text-acid uppercase">{siteCopy.emptyDevNote}</p>}
       </div>
       <div ref={ref} className="relative mt-8">
         {status === 'loading' && <div className="mx-auto h-[52svh] max-w-[1600px] animate-pulse bg-ink-2" />}

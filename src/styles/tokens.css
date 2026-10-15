@@ -4,7 +4,7 @@
   --color-paper: #f4f1ea;
   --color-paper-dim: rgba(244, 241, 234, 0.62);
   --color-paper-faint: rgba(244, 241, 234, 0.32);
-  --color-acid: #d7ff3a;
+  --color-acid: #ea580c;
   --color-rec: #ff3b30;
   --color-violet: #7a5cff;
   --color-hair: rgba(244, 241, 234, 0.12);
@@ -50,11 +50,11 @@
   --paper: #f4f1ea;
   --paper-dim: rgba(244, 241, 234, 0.62);
   --paper-faint: rgba(244, 241, 234, 0.32);
-  --acid: #d7ff3a;
+  --acid: #ea580c;
   --rec: #ff3b30;
   --violet: #7a5cff;
   --hair: rgba(244, 241, 234, 0.12);
-  --glass: rgba(16, 16, 22, 0.55);
+  --glass: rgba(8, 8, 11, 0.86);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   background: var(--ink);
   color: var(--paper);
@@ -134,7 +134,7 @@
   width: 72px;
   height: 72px;
   margin: -36px 0 0 -36px;
-  background: rgba(215, 255, 58, 0.12);
+  background: rgba(234, 88, 12, 0.18);
 }
 
 .pk-cursor-ring span {
