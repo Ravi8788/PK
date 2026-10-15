@@ -109,7 +109,7 @@ export function PortfolioForm({ onClose, onSubmit }: PortfolioFormProps) {
         image_url: mediaUrl,
         image: mediaUrl,
         media_type: mediaType,
-        thumbnail_url: thumbnailMediaUrl || undefined,
+        ...(thumbnailMediaUrl ? { thumbnail_url: thumbnailMediaUrl } : {}),
       });
     } catch (error) {
       console.error('Error uploading media:', error);

@@ -83,12 +83,16 @@ async function getAllFromCollection(collectionName: string): Promise<any[]> {
   return sortByCreatedAtDesc(items as Array<{ created_at?: number }>) as any[];
 }
 
+function withoutUndefined<T extends Record<string, unknown>>(item: T) {
+  return Object.fromEntries(Object.entries(item).filter(([, value]) => value !== undefined)) as T;
+}
+
 async function addToCollection(collectionName: string, item: any) {
   const firestore = ensureFirestoreReady();
-  const payload = {
+  const payload = withoutUndefined({
     ...item,
     created_at: item.created_at || Date.now(),
-  };
+  });
   const created = await addDoc(collection(firestore, collectionName), payload);
   return {
     id: created.id,
@@ -98,7 +102,7 @@ async function addToCollection(collectionName: string, item: any) {
 
 async function updateInCollection(collectionName: string, id: string, updates: any) {
   const firestore = ensureFirestoreReady();
-  await updateDoc(doc(firestore, collectionName, id), updates);
+  await updateDoc(doc(firestore, collectionName, id), withoutUndefined(updates));
   return { id, ...updates };
 }
 

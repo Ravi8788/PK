@@ -90,7 +90,7 @@ export function ReelForm({ onClose, onSubmit }: ReelFormProps) {
         description: formData.description,
         thumbnail_url: thumbnailUrlResult,
         video_url: videoUrlResult,
-        instagram_url: trimmedInstagramUrl || undefined,
+        ...(trimmedInstagramUrl ? { instagram_url: trimmedInstagramUrl } : {}),
       });
     } catch (error) {
       console.error('Error uploading files:', error);
