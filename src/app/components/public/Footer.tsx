@@ -13,7 +13,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="relative bg-ink px-5 pt-16 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
+    <footer className="relative bg-ink px-5 pt-2 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
       {flash && <div className="pointer-events-none absolute inset-0 bg-paper" aria-hidden="true" />}
       <div className="flex flex-wrap items-center justify-between gap-6 border-t border-hair pt-6">
         <Socials />

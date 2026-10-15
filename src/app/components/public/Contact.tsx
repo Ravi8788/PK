@@ -83,7 +83,7 @@ export function Contact() {
   ]
 
   return (
-    <section id="contact" className="pk-section relative overflow-hidden bg-ink py-16 md:py-24">
+    <section id="contact" className="pk-section relative overflow-hidden bg-ink pt-16 pb-6 md:pt-24 md:pb-8">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <motion.div
           className="mx-auto max-w-2xl text-center"
